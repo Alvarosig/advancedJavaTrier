@@ -25,7 +25,7 @@ public class Campeonato {
     private Integer id;
     
     @Column (name = "camp_descricao")
-    private String teamName;
+    private String champDesc;
     
     @Column (name = "camp_ano")
     private Integer year;
