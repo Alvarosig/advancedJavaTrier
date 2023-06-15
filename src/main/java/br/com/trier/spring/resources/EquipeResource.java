@@ -13,39 +13,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.trier.spring.models.Pais;
-import br.com.trier.spring.services.PaisService;
+import br.com.trier.spring.models.Equipe;
+import br.com.trier.spring.services.EquipeService;
 
 @RestController
-@RequestMapping(value = "/paises")
-public class PaisResource {
+@RequestMapping(value = "/equipes")
+public class EquipeResource {
     
     @Autowired
-    private PaisService service;
+    private EquipeService service;
     
     @PostMapping
-    public ResponseEntity<Pais> insert (@RequestBody Pais pais) {
-        Pais newPais = service.insert(pais);
-        return newPais != null ? ResponseEntity.ok(newPais) : ResponseEntity.noContent().build();
+    public ResponseEntity<Equipe> insert (@RequestBody Equipe equipe) {
+        Equipe newEquipe = service.insert(equipe);
+        return newEquipe != null ? ResponseEntity.ok(newEquipe) : ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Pais> findById (@PathVariable Integer id) {
-        Pais pais = service.findById(id);
-        return pais != null ? ResponseEntity.ok(pais) : ResponseEntity.noContent().build();
+    public ResponseEntity<Equipe> findById (@PathVariable Integer id) {
+        Equipe equipe = service.findById(id);
+        return equipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.noContent().build();
     }
     
     @GetMapping
-    public ResponseEntity<List<Pais>> listAll () {
-        List<Pais> lista = service.listAll();
+    public ResponseEntity<List<Equipe>> listAll () {
+        List<Equipe> lista = service.listAll();
         return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Pais> update (@PathVariable Integer id, @RequestBody Pais pais) {
-        pais.setId(id);
-        pais = service.update(pais);
-        return pais != null ? ResponseEntity.ok(pais) : ResponseEntity.noContent().build();
+    public ResponseEntity<Equipe> update (@PathVariable Integer id, @RequestBody Equipe equipe) {
+        equipe.setId(id);
+        equipe = service.update(equipe);
+        return equipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.noContent().build();
     }
     
     @DeleteMapping("/{id}")
@@ -54,5 +54,4 @@ public class PaisResource {
         return ResponseEntity.ok().build();
     }
     
-   
 }

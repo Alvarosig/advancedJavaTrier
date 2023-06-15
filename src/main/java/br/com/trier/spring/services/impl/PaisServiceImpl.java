@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Pais;
 import br.com.trier.spring.repositories.PaisRepository;
 import br.com.trier.spring.services.PaisService;
 
+@Service
 public class PaisServiceImpl implements PaisService {
 
     @Autowired

@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Campeonato;
 import br.com.trier.spring.repositories.CampeonatoRepository;
 import br.com.trier.spring.services.CampeonatoService;
 
+@Service
 public class CampeonatoServiceImpl implements CampeonatoService {
     
     @Autowired

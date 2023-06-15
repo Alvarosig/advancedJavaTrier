@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Equipe;
 import br.com.trier.spring.repositories.EquipeRepository;
 import br.com.trier.spring.services.EquipeService;
 
+@Service
 public class EquipeServiceImpl implements EquipeService {
 
     @Autowired
