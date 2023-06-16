@@ -15,5 +15,9 @@ public interface CampeonatoService {
     Campeonato update (Campeonato campeonato);
     
     void delete (Integer id);
+    
+    List<Campeonato> findByChampDescStartingWithIgnoreCase(String champDesc);
+    
+    List<Campeonato> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear);
 
 }

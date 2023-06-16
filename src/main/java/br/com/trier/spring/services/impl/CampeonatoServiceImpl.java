@@ -44,5 +44,15 @@ public class CampeonatoServiceImpl implements CampeonatoService {
             repository.delete(campeonato);
         }
     }
+    
+    @Override
+    public List<Campeonato> findByChampDescStartingWithIgnoreCase(String champDesc) {
+        return repository.findByChampDescStartingWithIgnoreCase(champDesc);
+    }
+    
+    @Override
+    public List<Campeonato> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear){
+        return repository.findByYearBetweenOrderByYearAsc(startYear, endYear);
+    }
 
 }

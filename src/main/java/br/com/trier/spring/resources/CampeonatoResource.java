@@ -51,7 +51,17 @@ public class CampeonatoResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable Integer id) {
         service.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build(); 
     }
     
+    @GetMapping("/nome/{champDesc}")
+    public ResponseEntity<List<Campeonato>> findByChampDescStartingWithIgnoreCase(@PathVariable String champDesc){
+        List<Campeonato> lista = service.findByChampDescStartingWithIgnoreCase(champDesc);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/entre/{startYear}/{endYear}")
+    public List<Campeonato> findByYearBetweenOrderByYearAsc(@PathVariable Integer startYear, @PathVariable Integer endYear) {
+        return service.findByYearBetweenOrderByYearAsc(startYear, endYear);
+    }
 }

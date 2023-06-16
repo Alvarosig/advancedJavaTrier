@@ -29,4 +29,5 @@ public class Campeonato {
     
     @Column (name = "camp_ano")
     private Integer year;
+    
 }
