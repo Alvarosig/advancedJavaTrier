@@ -44,5 +44,10 @@ public class EquipeServiceImpl implements EquipeService {
             repository.delete(equipe);
         }
     }
+    
+    @Override
+    public List<Equipe> findByTeamNameStartingWithIgnoreCase (String teamName) {
+        return repository.findByTeamNameStartingWithIgnoreCase(teamName);
+    }
 
 }

@@ -54,4 +54,10 @@ public class UserResource {
         return ResponseEntity.ok().build();
     }
     
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<User>> findByName (@PathVariable String name) {
+        List<User> lista = service.findByNameStartingWithIgnoreCase(name);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
+    
 }

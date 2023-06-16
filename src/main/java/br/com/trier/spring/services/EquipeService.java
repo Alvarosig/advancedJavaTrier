@@ -15,4 +15,6 @@ public interface EquipeService {
     Equipe update (Equipe equipe);
     
     void delete (Integer id);
+    
+    List<Equipe> findByTeamNameStartingWithIgnoreCase(String teamName);
 }

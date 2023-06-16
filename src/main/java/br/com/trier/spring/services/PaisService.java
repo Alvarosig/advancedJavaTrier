@@ -15,4 +15,6 @@ public interface PaisService {
     Pais update(Pais pais);
 
     void delete(Integer id);
+    
+    List<Pais> findByNameCountryStartingWithIgnoreCase(String nameCountry);
 }

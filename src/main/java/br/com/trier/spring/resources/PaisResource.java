@@ -54,5 +54,10 @@ public class PaisResource {
         return ResponseEntity.ok().build();
     }
     
+    @GetMapping("/nome/{nameCountry}")
+    public ResponseEntity<List<Pais>> findByNameStartingWithIgnoreCase (@PathVariable String nameCountry) {
+        List<Pais> lista = service.findByNameCountryStartingWithIgnoreCase(nameCountry);
+        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+    }
    
 }

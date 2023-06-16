@@ -45,4 +45,9 @@ public class PaisServiceImpl implements PaisService {
         }
     }
 
+    @Override
+    public List<Pais> findByNameCountryStartingWithIgnoreCase(String nameCountry) {
+        return repository.findByNameCountryStartingWithIgnoreCase(nameCountry);
+    }
+
 }
