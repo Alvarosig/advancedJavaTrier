@@ -56,6 +56,7 @@ class UserServiceTest extends BaseTests {
     
     @Test
     @DisplayName("Teste Remover usuário")
+    @Sql ( {"classpath:/resources/sqls/usuario.sql"})
     void removeUserTest () {
         userService.delete(1);
         List<User> lista = userService.listAll();

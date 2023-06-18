@@ -21,7 +21,7 @@ import br.com.trier.spring.services.CampeonatoService;
 public class CampeonatoResource {
 
     @Autowired
-    private CampeonatoService service;
+    private CampeonatoService service; 
     
     @PostMapping
     public ResponseEntity<Campeonato> insert (@RequestBody Campeonato campeonato) {
