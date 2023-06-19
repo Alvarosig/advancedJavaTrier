@@ -2,7 +2,7 @@ package br.com.trier.spring.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Equipe;
+import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -35,8 +36,8 @@ class EquipeServiceTest extends BaseTests {
 	@DisplayName("Teste buscar equipe por ID inexistente")
 	@Sql({ "classpath:/resources/sqls/equipe.sql" })
 	void findByIdNonExistsTest() {
-		var equipe = equipeService.findById(10);
-		assertNull(equipe);
+	    var exception = assertThrows(ObjectNotFound.class, () -> equipeService.findById(10));
+        assertEquals("A equipe 10 não existe", exception.getMessage()); 
 	}
 	
 	@Test
@@ -64,10 +65,8 @@ class EquipeServiceTest extends BaseTests {
 	@DisplayName("Teste remover equipe inexistente")
 	@Sql({ "classpath:/resources/sqls/equipe.sql" })
 	void removeEquipeNonExistsTest() {
-		equipeService.delete(10);
-		List<Equipe> lista = equipeService.listAll();
-		assertEquals(3, lista.size());
-		assertEquals(2, lista.get(0).getId());
+	    var exception = assertThrows(ObjectNotFound.class, () -> equipeService.delete(10));
+        assertEquals("A equipe 10 não existe", exception.getMessage()); 
 	}
 	
 	@Test
@@ -98,7 +97,8 @@ class EquipeServiceTest extends BaseTests {
 		assertEquals(1, lista.size());
 		lista = equipeService.findByTeamNameStartingWithIgnoreCase("ferrari");
 		assertEquals(1, lista.size());
-		lista = equipeService.findByTeamNameStartingWithIgnoreCase("h");
-		assertEquals(1, lista.size());
+		var exception = assertThrows(ObjectNotFound.class, () -> equipeService.findByTeamNameStartingWithIgnoreCase("z"));
+		assertEquals("Nenhum nome de equipe inicia com z", exception.getMessage());
 	}
+
 }

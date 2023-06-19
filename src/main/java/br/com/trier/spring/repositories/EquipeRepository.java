@@ -11,4 +11,6 @@ import br.com.trier.spring.models.Equipe;
 public interface EquipeRepository extends JpaRepository<Equipe, Integer>{
     
     List<Equipe> findByTeamNameStartingWithIgnoreCase(String teamName);
+    
+    Equipe findByTeamName (String teamName);
 }

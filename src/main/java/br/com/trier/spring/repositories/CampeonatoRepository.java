@@ -14,4 +14,6 @@ public interface CampeonatoRepository extends JpaRepository<Campeonato, Integer>
     
     List<Campeonato> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear);
     
+    Campeonato findByYear (Integer year);
+    
 }

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Campeonato;
+import br.com.trier.spring.models.Equipe;
 import br.com.trier.spring.repositories.CampeonatoRepository;
 import br.com.trier.spring.services.CampeonatoService;
+import br.com.trier.spring.services.exceptions.ObjectNotFound;
 
 @Service
 public class CampeonatoServiceImpl implements CampeonatoService {
@@ -16,10 +18,17 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Autowired
     private CampeonatoRepository repository;
     
+//    private void findByYear (Campeonato campeonato) {
+//        Campeonato busca = repository.findByYear(campeonato.getYear());
+//        if (busca != null && busca.getId() != campeonato.getId()) {
+//            throw new IntegrityViolation("Equipe já existente : %s".formatted(equipe.getTeamName()));
+//        }
+//    }
+    
     @Override
     public Campeonato findById (Integer id) {
         Optional <Campeonato> campeonato = repository.findById(id);
-        return campeonato.orElse(null);
+        return campeonato.orElseThrow(() -> new ObjectNotFound("O campeonato %s não existe".formatted(id)));
     }
 
     @Override
@@ -29,25 +38,32 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public List<Campeonato> listAll() {
-        return repository.findAll();
+        List <Campeonato> lista = repository.findAll();
+        if (lista.isEmpty()) {
+            throw new ObjectNotFound("Nenhum campeonato cadastrado");
+        }
+        return lista;
     }
 
     @Override
     public Campeonato update(Campeonato campeonato) {
+        findById(campeonato.getId());
         return repository.save(campeonato);
     }
 
     @Override
     public void delete(Integer id) {
         Campeonato campeonato = findById(id);
-        if (campeonato != null) {
             repository.delete(campeonato);
-        }
     }
     
     @Override
     public List<Campeonato> findByChampDescStartingWithIgnoreCase(String champDesc) {
-        return repository.findByChampDescStartingWithIgnoreCase(champDesc);
+        List <Campeonato> lista = repository.findByChampDescStartingWithIgnoreCase(champDesc);
+        if (lista.isEmpty()) {
+            throw new ObjectNotFound("Nenhum nome de campeonato inicia com %s".formatted(champDesc));
+        }
+        return lista;
     }
     
     @Override

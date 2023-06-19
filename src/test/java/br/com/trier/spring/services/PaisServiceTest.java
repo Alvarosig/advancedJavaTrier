@@ -2,7 +2,7 @@ package br.com.trier.spring.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Pais;
+import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -35,8 +36,8 @@ class PaisServiceTest extends BaseTests {
 	@DisplayName("Teste buscar país por ID inexistente")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })
 	void findByIdNonExistsTest() {
-		var pais = paisService.findById(10);
-		assertNull(pais);
+	    var exception = assertThrows(ObjectNotFound.class, () -> paisService.findById(10));
+        assertEquals("O país 10 não existe", exception.getMessage());     
 	}
 
 	@Test
@@ -64,10 +65,8 @@ class PaisServiceTest extends BaseTests {
 	@DisplayName("Teste remover país inexistente")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })
 	void removeUserNonExistsTest() {
-		paisService.delete(10);
-		List<Pais> lista = paisService.listAll();
-		assertEquals(3, lista.size());
-		assertEquals(2, lista.get(0).getId());
+	    var exception = assertThrows(ObjectNotFound.class, () -> paisService.delete(10));
+        assertEquals("O país 10 não existe", exception.getMessage());   
 	}
 
 	@Test
@@ -94,11 +93,11 @@ class PaisServiceTest extends BaseTests {
 	@DisplayName("Teste buscar por pais que inicia com")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })
 	void findByPaisStartsWithTest() {
-		List<Pais> lista = paisService.findByNameCountryStartingWithIgnoreCase("u");
-		assertEquals(0, lista.size());
-		lista = paisService.findByNameCountryStartingWithIgnoreCase("brasil");
+		List <Pais> lista = paisService.findByNameCountryStartingWithIgnoreCase("brasil");
 		assertEquals(1, lista.size());
 		lista = paisService.findByNameCountryStartingWithIgnoreCase("n");
-		assertEquals(2, lista.size());
+		assertEquals(1, lista.size());
+		var exception = assertThrows(ObjectNotFound.class, () -> paisService.findByNameCountryStartingWithIgnoreCase("z"));
+		assertEquals("Nenhum nome de país inicia com z", exception.getMessage());   
 	}
 }

@@ -26,26 +26,25 @@ public class PaisResource {
     @PostMapping
     public ResponseEntity<Pais> insert (@RequestBody Pais pais) {
         Pais newPais = service.insert(pais);
-        return newPais != null ? ResponseEntity.ok(newPais) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(newPais);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<Pais> findById (@PathVariable Integer id) {
         Pais pais = service.findById(id);
-        return pais != null ? ResponseEntity.ok(pais) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(pais);
     }
     
     @GetMapping
     public ResponseEntity<List<Pais>> listAll () {
         List<Pais> lista = service.listAll();
-        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(lista);
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<Pais> update (@PathVariable Integer id, @RequestBody Pais pais) {
         pais.setId(id);
-        pais = service.update(pais);
-        return pais != null ? ResponseEntity.ok(pais) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(service.update(pais));
     }
     
     @DeleteMapping("/{id}")
@@ -57,7 +56,7 @@ public class PaisResource {
     @GetMapping("/nome/{nameCountry}")
     public ResponseEntity<List<Pais>> findByNameStartingWithIgnoreCase (@PathVariable String nameCountry) {
         List<Pais> lista = service.findByNameCountryStartingWithIgnoreCase(nameCountry);
-        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(lista);
     }
    
 }

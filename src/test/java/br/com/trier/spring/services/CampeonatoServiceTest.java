@@ -3,7 +3,7 @@ package br.com.trier.spring.services;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Campeonato;
+import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -37,8 +38,8 @@ class CampeonatoServiceTest extends BaseTests {
 	@DisplayName("Teste buscar campeonato por ID inexistente")
 	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void findByIdNonExistsTest() {
-		var campeonato = campeonatoService.findById(10);
-		assertNull(campeonato);
+	    var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findById(10));
+        assertEquals("O campeonato 10 não existe", exception.getMessage()); 
 	}
 
 	@Test
@@ -67,10 +68,8 @@ class CampeonatoServiceTest extends BaseTests {
 	@DisplayName("Teste remover campeonato inexistente")
 	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void removeCampeonatoNonExistsTest() {
-		campeonatoService.delete(10);
-		List<Campeonato> lista = campeonatoService.listAll();
-		assertEquals(3, lista.size());
-		assertEquals(1, lista.get(0).getId());
+	    var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.delete(10));
+        assertEquals("O campeonato 10 não existe", exception.getMessage());
 	}
 
 	@Test
@@ -101,8 +100,8 @@ class CampeonatoServiceTest extends BaseTests {
 		assertEquals(1, lista.size());
 		lista = campeonatoService.findByChampDescStartingWithIgnoreCase("f1");
 		assertEquals(1, lista.size());
-		lista = campeonatoService.findByChampDescStartingWithIgnoreCase("c");
-		assertEquals(1, lista.size());
+		var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findByChampDescStartingWithIgnoreCase("z"));
+        assertEquals("Nenhum nome de campeonato inicia com z", exception.getMessage());
 	}
 
 	@Test

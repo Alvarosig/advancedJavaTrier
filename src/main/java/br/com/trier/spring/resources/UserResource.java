@@ -26,26 +26,25 @@ public class UserResource {
     @PostMapping
     public ResponseEntity<User> insert (@RequestBody User user) {
         User newUser = service.insert(user);
-        return newUser != null ? ResponseEntity.ok(newUser) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(newUser);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<User> findById (@PathVariable Integer id) {
         User user = service.findById(id);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(user);
     }
     
     @GetMapping
     public ResponseEntity<List<User>> listAll () {
         List<User> lista = service.listAll();
-        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(lista);
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<User> update (@PathVariable Integer id, @RequestBody User user) {
         user.setId(id);
-        user = service.update(user);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(service.update(user));
     }
     
     @DeleteMapping("/{id}")
@@ -55,9 +54,9 @@ public class UserResource {
     }
     
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<User>> findByName (@PathVariable String name) {
+    public ResponseEntity<List<User>> findByNameStartingWithIgnoreCase (@PathVariable String name) {
         List<User> lista = service.findByNameStartingWithIgnoreCase(name);
-        return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(lista);
     }
     
 }
