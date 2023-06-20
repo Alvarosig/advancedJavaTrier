@@ -18,7 +18,7 @@ public class EquipeServiceImpl implements EquipeService {
     @Autowired
     private EquipeRepository repository;
     
-    private void findByTeamName(Equipe equipe) {
+    private void findByTeamNameExists(Equipe equipe) {
         Equipe busca = repository.findByTeamName(equipe.getTeamName());
         if (busca != null && busca.getId() != equipe.getId()) {
             throw new IntegrityViolation("Equipe já cadastrada");
@@ -33,6 +33,7 @@ public class EquipeServiceImpl implements EquipeService {
 
     @Override
     public Equipe insert(Equipe equipe) {
+    	findByTeamNameExists(equipe);
         return repository.save(equipe);
     }
 
@@ -48,13 +49,14 @@ public class EquipeServiceImpl implements EquipeService {
     @Override
     public Equipe update(Equipe equipe) {
         findById(equipe.getId());
+       	findByTeamNameExists(equipe);
         return repository.save(equipe);
     }
 
     @Override
     public void delete(Integer id) {
         Equipe equipe = findById(id);
-            repository.delete(equipe);
+        repository.delete(equipe);
     }
     
     @Override

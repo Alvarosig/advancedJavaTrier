@@ -18,7 +18,7 @@ public class PaisServiceImpl implements PaisService {
     @Autowired
     private PaisRepository repository;
     
-    private void findByNameCountry(Pais pais) {
+    private void findByNameCountryExists(Pais pais) {
         Pais busca = repository.findByNameCountry(pais.getNameCountry());
         if (busca != null && busca.getId() != pais.getId()) {
             throw new IntegrityViolation("País já existente");
@@ -33,6 +33,7 @@ public class PaisServiceImpl implements PaisService {
 
     @Override
     public Pais insert(Pais pais) {
+    	findByNameCountryExists(pais);
         return repository.save(pais);
     }
 
@@ -48,6 +49,7 @@ public class PaisServiceImpl implements PaisService {
     @Override
     public Pais update(Pais pais) {
         findById(pais.getId());
+        findByNameCountryExists(pais);
         return repository.save(pais);
     }
 

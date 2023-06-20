@@ -18,7 +18,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Autowired
     private CampeonatoRepository repository;
     
-    private void findByYear (Campeonato campeonato) {
+    private void findByYearExist (Campeonato campeonato) {
         Campeonato busca = repository.findByYear(campeonato.getYear());
         if (busca != null && busca.getId() != campeonato.getId()) {
             throw new IntegrityViolation("Equipe já existente");
@@ -33,6 +33,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public Campeonato insert(Campeonato campeonato) {
+    	findByYearExist(campeonato);
         return repository.save(campeonato);
     }
 
@@ -48,13 +49,14 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Override
     public Campeonato update(Campeonato campeonato) {
         findById(campeonato.getId());
+        findByYearExist(campeonato);
         return repository.save(campeonato);
     }
 
     @Override
     public void delete(Integer id) {
         Campeonato campeonato = findById(id);
-            repository.delete(campeonato);
+        repository.delete(campeonato);
     }
     
     @Override

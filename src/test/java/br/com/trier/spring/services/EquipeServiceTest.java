@@ -45,10 +45,13 @@ class EquipeServiceTest extends BaseTests {
 	@DisplayName("Teste inserir equipe")
 	void insertPaisTest() {
 		Equipe equipe = new Equipe (null, "insert");
+		Equipe equipe2 = new Equipe (null, "insert");
 		equipeService.insert(equipe);
 		equipe = equipeService.findById(1);
 		assertEquals(1, equipe.getId());
 		assertEquals("insert", equipe.getTeamName());
+		var exception = assertThrows(IntegrityViolation.class, () -> equipeService.insert(equipe2));
+	    assertEquals("Equipe já cadastrada", exception.getMessage()); 
 	}
 	
 	@Test
@@ -76,6 +79,11 @@ class EquipeServiceTest extends BaseTests {
 	void listAllEquipeTest() {
 		List<Equipe> lista = equipeService.listAll();
 		assertEquals(3, lista.size());
+		equipeService.delete(1);
+		equipeService.delete(2);
+		equipeService.delete(3);
+		var exception = assertThrows(ObjectNotFound.class, () -> equipeService.listAll());
+        assertEquals("Nenhuma equipe cadastrada", exception.getMessage());  
 	}
 	
 	@Test
@@ -102,12 +110,4 @@ class EquipeServiceTest extends BaseTests {
 		assertEquals("Nenhum nome de equipe inicia com z", exception.getMessage());
 	}
 
-	@Test
-    @DisplayName("Teste buscar equipe já cadastrada")
-    @Sql({ "classpath:/resources/sqls/equipe.sql" })
-    public void testFindByTeamName() {
-        Equipe equipe = new Equipe(1, "Equipe A");
-        var exception = assertThrows(IntegrityViolation.class, () ->  equipeService.findByTeamName(equipe));
-        assertEquals("Deveria lançar uma exceção para equipe já cadastrada");
-    }
 }

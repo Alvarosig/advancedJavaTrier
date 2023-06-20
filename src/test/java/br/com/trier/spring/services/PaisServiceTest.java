@@ -13,8 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Pais;
-import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import br.com.trier.spring.services.exceptions.IntegrityViolation;
+import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -45,10 +45,13 @@ class PaisServiceTest extends BaseTests {
 	@DisplayName("Teste inserir país")
 	void insertPaisTest() {
 		Pais pais = new Pais(null, "insert");
+		Pais pais2 = new Pais (null, "insert");
 		paisService.insert(pais);
 		pais = paisService.findById(1);
 		assertEquals(1, pais.getId());
 		assertEquals("insert", pais.getNameCountry());
+		var exception = assertThrows(IntegrityViolation.class, () -> paisService.insert(pais2));
+	    assertEquals("País já existente", exception.getMessage());  
 	}
 
 	@Test
@@ -76,6 +79,11 @@ class PaisServiceTest extends BaseTests {
 	void listAllPaisTest() {
 		List<Pais> lista = paisService.listAll();
 		assertEquals(3, lista.size());
+		paisService.delete(1);
+		paisService.delete(2);
+		paisService.delete(3);
+		var exception = assertThrows(ObjectNotFound.class, () -> paisService.listAll());
+        assertEquals("Nenhum país cadastrado", exception.getMessage());
 	}
 
 	@Test
@@ -89,7 +97,7 @@ class PaisServiceTest extends BaseTests {
 		pais = paisService.findById(1);
 		assertEquals("altera", pais.getNameCountry());
 	}
-
+	
 	@Test
 	@DisplayName("Teste buscar por pais que inicia com")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })
@@ -99,14 +107,6 @@ class PaisServiceTest extends BaseTests {
 		lista = paisService.findByNameCountryStartingWithIgnoreCase("n");
 		assertEquals(1, lista.size());
 		var exception = assertThrows(ObjectNotFound.class, () -> paisService.findByNameCountryStartingWithIgnoreCase("z"));
-		assertEquals("Nenhum nome de país inicia com z", exception.getMessage());   
-	}
-	
-	@Test
-	@DisplayName("Teste buscar por nome do país")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	void findByNameCountryTest() {
-		Pais pais = new Pais (null, "Berlim");
-	    assertEquals("Berlim", pais.getNameCountry());
+		assertEquals("Nenhum nome de país inicia com z", exception.getMessage());  
 	}
 }
