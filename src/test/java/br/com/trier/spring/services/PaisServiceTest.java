@@ -45,15 +45,24 @@ class PaisServiceTest extends BaseTests {
 	@DisplayName("Teste inserir país")
 	void insertPaisTest() {
 		Pais pais = new Pais(null, "insert");
-		Pais pais2 = new Pais (null, "insert");
 		paisService.insert(pais);
 		pais = paisService.findById(1);
 		assertEquals(1, pais.getId());
-		assertEquals("insert", pais.getNameCountry());
-		var exception = assertThrows(IntegrityViolation.class, () -> paisService.insert(pais2));
-	    assertEquals("País já existente", exception.getMessage());  
+		assertEquals("insert", pais.getNameCountry()); 
 	}
-
+	
+	@Test
+    @DisplayName("Teste inserir país já existente")
+    void insertPaisExistTest() {
+	    Pais pais = new Pais (null, "insert");
+	    Pais pais2 = new Pais (null, "insert");
+        paisService.insert(pais);
+        assertEquals(2, pais.getId());
+        assertEquals("insert", pais.getNameCountry());
+        var exception = assertThrows(IntegrityViolation.class, () -> paisService.insert(pais2));
+        assertEquals("País já existente", exception.getMessage()); 
+    }
+	
 	@Test
 	@DisplayName("Teste Remover país")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })
@@ -79,13 +88,21 @@ class PaisServiceTest extends BaseTests {
 	void listAllPaisTest() {
 		List<Pais> lista = paisService.listAll();
 		assertEquals(3, lista.size());
-		paisService.delete(1);
-		paisService.delete(2);
-		paisService.delete(3);
-		var exception = assertThrows(ObjectNotFound.class, () -> paisService.listAll());
-        assertEquals("Nenhum país cadastrado", exception.getMessage());
 	}
 
+	@Test
+    @DisplayName("Teste listar todos sem nenhum cadastro")
+    @Sql({ "classpath:/resources/sqls/pais.sql" })
+    void listAllNoPaisTest() {
+        List<Pais> lista = paisService.listAll();
+        assertEquals(3, lista.size());
+        paisService.delete(1);
+        paisService.delete(2);
+        paisService.delete(3);
+        var exception = assertThrows(ObjectNotFound.class, () -> paisService.listAll());
+        assertEquals("Nenhum país cadastrado", exception.getMessage());
+    }
+	
 	@Test
 	@DisplayName("Teste alterar país")
 	@Sql({ "classpath:/resources/sqls/pais.sql" })

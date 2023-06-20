@@ -21,7 +21,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     private void findByYearExist (Campeonato campeonato) {
         Campeonato busca = repository.findByYear(campeonato.getYear());
         if (busca != null && busca.getId() != campeonato.getId()) {
-            throw new IntegrityViolation("Equipe já existente");
+            throw new IntegrityViolation("Campeonato já cadastrado");
         }
     }
     

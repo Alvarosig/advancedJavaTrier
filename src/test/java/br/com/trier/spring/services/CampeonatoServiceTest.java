@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Campeonato;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
@@ -54,6 +55,18 @@ class CampeonatoServiceTest extends BaseTests {
 	}
 
 	@Test
+    @DisplayName("Teste inserir campeonato já existente")
+    void insertCampeonatoExistTest() {
+	    Campeonato campeonato = new Campeonato (null, "insert", 1);
+        Campeonato campeonato2 = new Campeonato (null, "insert", 1);
+        campeonatoService.insert(campeonato);
+        assertEquals(2, campeonato.getId());
+        assertEquals("insert", campeonato.getChampDesc());
+        var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato2));
+        assertEquals("Campeonato já cadastrado", exception.getMessage()); 
+    }
+	
+	@Test
 	@DisplayName("Teste Remover campeonato")
 	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void removeCampeonatoTest() {
@@ -79,7 +92,20 @@ class CampeonatoServiceTest extends BaseTests {
 		List<Campeonato> lista = campeonatoService.listAll();
 		assertEquals(3, lista.size());
 	}
-
+	
+	@Test
+    @DisplayName("Teste listar todos sem nenhum cadastro")
+    @Sql({ "classpath:/resources/sqls/campeonato.sql" })
+    void listAllNoCampeonatoTest() {
+        List<Campeonato> lista = campeonatoService.listAll();
+        assertEquals(3, lista.size());
+        campeonatoService.delete(1);
+        campeonatoService.delete(2);
+        campeonatoService.delete(3);
+        var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.listAll());
+        assertEquals("Nenhum campeonato cadastrado", exception.getMessage());
+    }
+	
 	@Test
 	@DisplayName("Teste alterar campeonato")
 	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
@@ -115,5 +141,13 @@ class CampeonatoServiceTest extends BaseTests {
 		assertEquals(resultadoEsperado.size(), campeonatos.size());
 		assertArrayEquals(resultadoEsperado.toArray(), campeonatos.toArray());
 	}
+	
+	@Test
+    @DisplayName("Teste buscar por campeonato entre anos inexistentes")
+    @Sql({ "classpath:/resources/sqls/campeonato.sql" })
+    void findByCampeonatoYearBetweenNoExistTest() {
+        var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findByYearBetweenOrderByYearAsc(2000, 2002));
+        assertEquals("Nenhum campeonato encontrado entre 2000 e 2002", exception.getMessage());
+    }
 
 }

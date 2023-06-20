@@ -45,14 +45,23 @@ class EquipeServiceTest extends BaseTests {
 	@DisplayName("Teste inserir equipe")
 	void insertPaisTest() {
 		Equipe equipe = new Equipe (null, "insert");
-		Equipe equipe2 = new Equipe (null, "insert");
 		equipeService.insert(equipe);
 		equipe = equipeService.findById(1);
 		assertEquals(1, equipe.getId());
 		assertEquals("insert", equipe.getTeamName());
-		var exception = assertThrows(IntegrityViolation.class, () -> equipeService.insert(equipe2));
-	    assertEquals("Equipe já cadastrada", exception.getMessage()); 
 	}
+	
+	@Test
+    @DisplayName("Teste inserir equipe já existente")
+    void insertPaisExistTest() {
+        Equipe equipe = new Equipe (null, "insert");
+        Equipe equipe2 = new Equipe (null, "insert");
+        equipeService.insert(equipe);
+        assertEquals(2, equipe.getId());
+        assertEquals("insert", equipe.getTeamName());
+        var exception = assertThrows(IntegrityViolation.class, () -> equipeService.insert(equipe2));
+        assertEquals("Equipe já cadastrada", exception.getMessage()); 
+    }
 	
 	@Test
 	@DisplayName("Teste Remover equipe")
@@ -74,16 +83,24 @@ class EquipeServiceTest extends BaseTests {
 	}
 	
 	@Test
-	@DisplayName("Teste listar todos")
+	@DisplayName("Teste listar todos com cadastro")
 	@Sql({ "classpath:/resources/sqls/equipe.sql" })
 	void listAllEquipeTest() {
 		List<Equipe> lista = equipeService.listAll();
-		assertEquals(3, lista.size());
-		equipeService.delete(1);
-		equipeService.delete(2);
-		equipeService.delete(3);
-		var exception = assertThrows(ObjectNotFound.class, () -> equipeService.listAll());
-        assertEquals("Nenhuma equipe cadastrada", exception.getMessage());  
+		assertEquals(3, lista.size());  
+	}
+	
+	@Test
+    @DisplayName("Teste listar todos sem nenhum cadastro")
+    @Sql({ "classpath:/resources/sqls/equipe.sql" })
+    void listAllNoEquipeTest() {
+	    List<Equipe> lista = equipeService.listAll();
+        assertEquals(3, lista.size());
+        equipeService.delete(1);
+        equipeService.delete(2);
+        equipeService.delete(3);
+        var exception = assertThrows(ObjectNotFound.class, () -> equipeService.listAll());
+        assertEquals("Nenhuma equipe cadastrada", exception.getMessage());
 	}
 	
 	@Test
