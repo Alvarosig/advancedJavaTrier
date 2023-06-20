@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Pais;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -99,5 +100,13 @@ class PaisServiceTest extends BaseTests {
 		assertEquals(1, lista.size());
 		var exception = assertThrows(ObjectNotFound.class, () -> paisService.findByNameCountryStartingWithIgnoreCase("z"));
 		assertEquals("Nenhum nome de país inicia com z", exception.getMessage());   
+	}
+	
+	@Test
+	@DisplayName("Teste buscar por nome do país")
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	void findByNameCountryTest() {
+		Pais pais = new Pais (null, "Berlim");
+	    assertEquals("Berlim", pais.getNameCountry());
 	}
 }

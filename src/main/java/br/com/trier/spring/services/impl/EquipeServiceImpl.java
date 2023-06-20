@@ -21,7 +21,7 @@ public class EquipeServiceImpl implements EquipeService {
     private void findByTeamName(Equipe equipe) {
         Equipe busca = repository.findByTeamName(equipe.getTeamName());
         if (busca != null && busca.getId() != equipe.getId()) {
-            throw new IntegrityViolation("Equipe já existente : %s".formatted(equipe.getTeamName()));
+            throw new IntegrityViolation("Equipe já cadastrada");
         }
     }
     

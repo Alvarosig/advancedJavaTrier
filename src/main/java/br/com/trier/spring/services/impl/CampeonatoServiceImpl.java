@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Campeonato;
-import br.com.trier.spring.models.Equipe;
 import br.com.trier.spring.repositories.CampeonatoRepository;
 import br.com.trier.spring.services.CampeonatoService;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 
 @Service
@@ -18,12 +18,12 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Autowired
     private CampeonatoRepository repository;
     
-//    private void findByYear (Campeonato campeonato) {
-//        Campeonato busca = repository.findByYear(campeonato.getYear());
-//        if (busca != null && busca.getId() != campeonato.getId()) {
-//            throw new IntegrityViolation("Equipe já existente : %s".formatted(equipe.getTeamName()));
-//        }
-//    }
+    private void findByYear (Campeonato campeonato) {
+        Campeonato busca = repository.findByYear(campeonato.getYear());
+        if (busca != null && busca.getId() != campeonato.getId()) {
+            throw new IntegrityViolation("Equipe já existente");
+        }
+    }
     
     @Override
     public Campeonato findById (Integer id) {
@@ -68,7 +68,11 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     
     @Override
     public List<Campeonato> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear){
-        return repository.findByYearBetweenOrderByYearAsc(startYear, endYear);
+    	List<Campeonato> lista = repository.findByYearBetweenOrderByYearAsc(startYear, endYear);
+        if (lista.isEmpty()) {
+            throw new ObjectNotFound("Nenhum campeonato encontrado entre %d e %d".formatted(startYear, endYear));
+        }
+        return lista;
     }
 
 }

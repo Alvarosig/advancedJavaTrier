@@ -21,7 +21,7 @@ public class PaisServiceImpl implements PaisService {
     private void findByNameCountry(Pais pais) {
         Pais busca = repository.findByNameCountry(pais.getNameCountry());
         if (busca != null && busca.getId() != pais.getId()) {
-            throw new IntegrityViolation("País já existente : %s".formatted(pais.getNameCountry()));
+            throw new IntegrityViolation("País já existente");
         }
     }
     

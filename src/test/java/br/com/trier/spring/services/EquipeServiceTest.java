@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Equipe;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
@@ -101,4 +102,12 @@ class EquipeServiceTest extends BaseTests {
 		assertEquals("Nenhum nome de equipe inicia com z", exception.getMessage());
 	}
 
+	@Test
+    @DisplayName("Teste buscar equipe já cadastrada")
+    @Sql({ "classpath:/resources/sqls/equipe.sql" })
+    public void testFindByTeamName() {
+        Equipe equipe = new Equipe(1, "Equipe A");
+        var exception = assertThrows(IntegrityViolation.class, () ->  equipeService.findByTeamName(equipe));
+        assertEquals("Deveria lançar uma exceção para equipe já cadastrada");
+    }
 }
