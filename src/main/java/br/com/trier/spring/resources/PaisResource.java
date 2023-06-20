@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.spring.models.Pais;
+import br.com.trier.spring.models.dto.PaisDTO;
 import br.com.trier.spring.services.PaisService;
 
 @RestController
@@ -24,27 +25,26 @@ public class PaisResource {
     private PaisService service;
     
     @PostMapping
-    public ResponseEntity<Pais> insert (@RequestBody Pais pais) {
-        Pais newPais = service.insert(pais);
-        return ResponseEntity.ok(newPais);
+    public ResponseEntity<PaisDTO> insert (@RequestBody PaisDTO pais) {
+        return ResponseEntity.ok(service.insert(new Pais (pais)).toDTO());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Pais> findById (@PathVariable Integer id) {
+    public ResponseEntity<PaisDTO> findById (@PathVariable Integer id) {
         Pais pais = service.findById(id);
-        return ResponseEntity.ok(pais);
+        return ResponseEntity.ok(pais.toDTO());
     }
     
     @GetMapping
-    public ResponseEntity<List<Pais>> listAll () {
-        List<Pais> lista = service.listAll();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<PaisDTO>> listAll () {
+        return ResponseEntity.ok(service.listAll().stream().map((pais) -> pais.toDTO()).toList());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Pais> update (@PathVariable Integer id, @RequestBody Pais pais) {
+    public ResponseEntity<PaisDTO> update (@PathVariable Integer id, @RequestBody PaisDTO paisDTO) {
+        Pais pais = new Pais (paisDTO);
         pais.setId(id);
-        return ResponseEntity.ok(service.update(pais));
+        return ResponseEntity.ok(service.update(pais).toDTO());
     }
     
     @DeleteMapping("/{id}")
@@ -54,9 +54,8 @@ public class PaisResource {
     }
     
     @GetMapping("/nome/{nameCountry}")
-    public ResponseEntity<List<Pais>> findByNameStartingWithIgnoreCase (@PathVariable String nameCountry) {
-        List<Pais> lista = service.findByNameCountryStartingWithIgnoreCase(nameCountry);
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<PaisDTO>> findByNameStartingWithIgnoreCase (@PathVariable String nameCountry) {
+        return ResponseEntity.ok(service.findByNameCountryStartingWithIgnoreCase(nameCountry).stream().map((pais) -> pais.toDTO()).toList());
     }
    
 }
