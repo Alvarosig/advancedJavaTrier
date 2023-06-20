@@ -55,15 +55,24 @@ class CampeonatoServiceTest extends BaseTests {
 	}
 
 	@Test
-    @DisplayName("Teste inserir campeonato já existente")
+    @DisplayName("Teste inserir campeonato já existente") //arrumar
     void insertCampeonatoExistTest() {
 	    Campeonato campeonato = new Campeonato (null, "insert", 1);
         Campeonato campeonato2 = new Campeonato (null, "insert", 1);
         campeonatoService.insert(campeonato);
+        campeonatoService.insert(campeonato2);
         assertEquals(2, campeonato.getId());
         assertEquals("insert", campeonato.getChampDesc());
         var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato2));
         assertEquals("Campeonato já cadastrado", exception.getMessage()); 
+    }
+	
+	@Test
+    @DisplayName("Teste inserir campeonato com ano menor que 1990")
+    void insertCampeonatoLessThanTest() {
+        Campeonato campeonato = new Campeonato (null, "insert", 1989);
+        var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato));
+        assertEquals("Ano inválido", exception.getMessage()); 
     }
 	
 	@Test

@@ -1,5 +1,6 @@
 package br.com.trier.spring.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,15 @@ public class CampeonatoServiceImpl implements CampeonatoService {
         }
     }
     
+    private void findByYearLimiter (Campeonato campeonato) {
+        if (campeonato.getYear() == null) {
+            throw new IntegrityViolation("Ano não pode ser nulo");
+        }
+        if (campeonato.getYear() < 1990 || campeonato.getYear() > LocalDateTime.now().plusYears(1).getYear()) {
+            throw new IntegrityViolation("Ano inválido");
+        }
+    }
+    
     @Override
     public Campeonato findById (Integer id) {
         Optional <Campeonato> campeonato = repository.findById(id);
@@ -34,6 +44,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Override
     public Campeonato insert(Campeonato campeonato) {
     	findByYearExist(campeonato);
+    	findByYearLimiter(campeonato);
         return repository.save(campeonato);
     }
 
@@ -50,6 +61,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     public Campeonato update(Campeonato campeonato) {
         findById(campeonato.getId());
         findByYearExist(campeonato);
+        findByYearLimiter(campeonato);
         return repository.save(campeonato);
     }
 
