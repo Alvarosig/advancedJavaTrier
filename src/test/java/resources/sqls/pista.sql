@@ -1,0 +1,9 @@
+INSERT INTO pista
+(id_pista, nome_pista, tamanho_pista)
+VALUES(1, 'Interlagos', 5000);
+INSERT INTO pista
+(id_pista, nome_pista, tamanho_pista)
+VALUES(2, 'Madero', 7500);
+INSERT INTO pista
+(id_pista, nome_pista, tamanho_pista)
+VALUES(3, 'Junipero', 1000);

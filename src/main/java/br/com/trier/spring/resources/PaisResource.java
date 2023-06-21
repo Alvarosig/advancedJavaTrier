@@ -37,7 +37,7 @@ public class PaisResource {
     
     @GetMapping
     public ResponseEntity<List<PaisDTO>> listAll () {
-        return ResponseEntity.ok(service.listAll().stream().map((pais) -> pais.toDTO()).toList());
+        return ResponseEntity.ok(service.listAll().stream().map( pais -> pais.toDTO()).toList());
     }
     
     @PutMapping("/{id}")
@@ -55,7 +55,7 @@ public class PaisResource {
     
     @GetMapping("/nome/{nameCountry}")
     public ResponseEntity<List<PaisDTO>> findByNameStartingWithIgnoreCase (@PathVariable String nameCountry) {
-        return ResponseEntity.ok(service.findByNameCountryStartingWithIgnoreCase(nameCountry).stream().map((pais) -> pais.toDTO()).toList());
+        return ResponseEntity.ok(service.findByNameCountryStartingWithIgnoreCase(nameCountry).stream().map( pais -> pais.toDTO()).toList());
     }
    
 }
