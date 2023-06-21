@@ -1,5 +1,6 @@
 package br.com.trier.spring.models;
 
+import br.com.trier.spring.models.dto.EquipeDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,4 +28,11 @@ public class Equipe {
     @Column (name = "nome_equipe", unique = true)
     private String teamName;
     
+    public Equipe (EquipeDTO dto) {
+        this(dto.getId(), dto.getTeamName());
+    }
+    
+    public EquipeDTO toDTO() {
+        return new EquipeDTO(id, getTeamName());
+    }
 }

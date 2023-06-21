@@ -55,12 +55,11 @@ class CampeonatoServiceTest extends BaseTests {
 	}
 
 	@Test
-    @DisplayName("Teste inserir campeonato já existente") //arrumar
+    @DisplayName("Teste inserir campeonato já existente") 
     void insertCampeonatoExistTest() {
-	    Campeonato campeonato = new Campeonato (null, "insert", 1);
-        Campeonato campeonato2 = new Campeonato (null, "insert", 1);
+	    Campeonato campeonato = new Campeonato (null, "insert", 2000);
+        Campeonato campeonato2 = new Campeonato (null, "insert", 2000);
         campeonatoService.insert(campeonato);
-        campeonatoService.insert(campeonato2);
         assertEquals(2, campeonato.getId());
         assertEquals("insert", campeonato.getChampDesc());
         var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato2));
@@ -159,4 +158,11 @@ class CampeonatoServiceTest extends BaseTests {
         assertEquals("Nenhum campeonato encontrado entre 2000 e 2002", exception.getMessage());
     }
 
+	@Test
+	@DisplayName("Insert novo campeonato com ano nulo")
+	void insertNullYearTest() {	
+	    Campeonato campeonato = new Campeonato(null, "Campeonato", null);
+	    var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato));
+        assertEquals("Ano não pode ser nulo", exception.getMessage());
+	}
 }

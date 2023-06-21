@@ -1,5 +1,6 @@
 package br.com.trier.spring.models;
 
+import br.com.trier.spring.models.dto.CampeonatoDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,4 +31,11 @@ public class Campeonato {
     @Column (name = "camp_ano")
     private Integer year;
     
+    public Campeonato (CampeonatoDTO dto) {
+        this(dto.getId(), dto.getChampDesc(), dto.getYear());
+    }
+    
+    public CampeonatoDTO toDTO() {
+        return new CampeonatoDTO(id, getChampDesc(), getYear());
+    }
 }
