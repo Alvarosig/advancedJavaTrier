@@ -55,11 +55,11 @@ public class CampeonatoResource {
     
     @GetMapping("/nome/{champDesc}")
     public ResponseEntity<List<CampeonatoDTO>> findByChampDescStartingWithIgnoreCase(@PathVariable String champDesc){
-    	return ResponseEntity.ok(service.findByChampDescStartingWithIgnoreCase(champDesc).stream().map((campeonato) -> campeonato.toDTO()).toList());
+    	return ResponseEntity.ok(service.findByChampDescStartingWithIgnoreCase(champDesc).stream().map(campeonato -> campeonato.toDTO()).toList());
     }
     
     @GetMapping("/entre/{startYear}/{endYear}")
     public ResponseEntity <List<CampeonatoDTO>> findByYearBetweenOrderByYearAsc(@PathVariable Integer startYear, @PathVariable Integer endYear) {
-    	return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(startYear, endYear).stream().map((campeonato) -> campeonato.toDTO()).toList());
+    	return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(startYear, endYear).stream().map(campeonato -> campeonato.toDTO()).toList());
     }
 }
