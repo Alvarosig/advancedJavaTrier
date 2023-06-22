@@ -19,5 +19,7 @@ public interface CampeonatoService {
     List<Campeonato> findByChampDescStartingWithIgnoreCase(String champDesc);
     
     List<Campeonato> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear);
+    
+    List<Campeonato> findByYear (Integer year);
 
 }

@@ -62,4 +62,9 @@ public class CampeonatoResource {
     public ResponseEntity <List<CampeonatoDTO>> findByYearBetweenOrderByYearAsc(@PathVariable Integer startYear, @PathVariable Integer endYear) {
     	return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(startYear, endYear).stream().map(campeonato -> campeonato.toDTO()).toList());
     }
+    
+    @GetMapping("/ano/{year}")
+    public ResponseEntity <List<CampeonatoDTO>> findByYear (@PathVariable Integer year) {
+        return ResponseEntity.ok(service.findByYear(year).stream().map(campeonato -> campeonato.toDTO()).toList());
+    }
 }

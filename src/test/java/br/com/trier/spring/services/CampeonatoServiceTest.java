@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import br.com.trier.spring.BaseTests;
 import br.com.trier.spring.models.Campeonato;
@@ -20,6 +21,7 @@ import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
+@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:/resources/sqls/campeonato.sql")
 class CampeonatoServiceTest extends BaseTests {
 
 	@Autowired
@@ -27,7 +29,7 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar campeonato por ID")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
+	
 	void findByIdTest() {
 		var campeonato = campeonatoService.findById(1);
 		assertNotNull(campeonato);
@@ -37,7 +39,6 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar campeonato por ID inexistente")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void findByIdNonExistsTest() {
 	    var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findById(10));
         assertEquals("O campeonato 10 não existe", exception.getMessage()); 
@@ -45,26 +46,15 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste inserir campeonato")
+	@Sql({"classpath:/resources/sqls/limpa_tabela.sql"})
 	void insertCampeonatoTest() {
 		Campeonato campeonato = new Campeonato(null, "insert", 2005);
 		campeonatoService.insert(campeonato);
-		campeonato = campeonatoService.findById(1);
+		assertEquals(1, campeonatoService.listAll().size());
 		assertEquals(1, campeonato.getId());
 		assertEquals("insert", campeonato.getChampDesc());
 		assertEquals(2005, campeonato.getYear());
 	}
-
-	@Test
-    @DisplayName("Teste inserir campeonato já existente") 
-    void insertCampeonatoExistTest() {
-	    Campeonato campeonato = new Campeonato (null, "insert", 2000);
-        Campeonato campeonato2 = new Campeonato (null, "insert", 2000);
-        campeonatoService.insert(campeonato);
-        assertEquals(2, campeonato.getId());
-        assertEquals("insert", campeonato.getChampDesc());
-        var exception = assertThrows(IntegrityViolation.class, () -> campeonatoService.insert(campeonato2));
-        assertEquals("Campeonato já cadastrado", exception.getMessage()); 
-    }
 	
 	@Test
     @DisplayName("Teste inserir campeonato com ano menor que 1990")
@@ -76,7 +66,6 @@ class CampeonatoServiceTest extends BaseTests {
 	
 	@Test
 	@DisplayName("Teste Remover campeonato")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void removeCampeonatoTest() {
 		campeonatoService.delete(1);
 		List<Campeonato> lista = campeonatoService.listAll();
@@ -87,7 +76,6 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste remover campeonato inexistente")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void removeCampeonatoNonExistsTest() {
 	    var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.delete(10));
         assertEquals("O campeonato 10 não existe", exception.getMessage());
@@ -95,7 +83,6 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste listar todos")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void listAllCampeonatoTest() {
 		List<Campeonato> lista = campeonatoService.listAll();
 		assertEquals(3, lista.size());
@@ -103,7 +90,6 @@ class CampeonatoServiceTest extends BaseTests {
 	
 	@Test
     @DisplayName("Teste listar todos sem nenhum cadastro")
-    @Sql({ "classpath:/resources/sqls/campeonato.sql" })
     void listAllNoCampeonatoTest() {
         List<Campeonato> lista = campeonatoService.listAll();
         assertEquals(3, lista.size());
@@ -116,7 +102,6 @@ class CampeonatoServiceTest extends BaseTests {
 	
 	@Test
 	@DisplayName("Teste alterar campeonato")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void updateCampeonatoTest() {
 		var campeonato = campeonatoService.findById(1);
 		assertEquals("Campeonato Veneza", campeonato.getChampDesc());
@@ -128,7 +113,6 @@ class CampeonatoServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por campeonato que inicia com")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void findByCampeonatoStartsWithTest() {
 		List<Campeonato> lista = campeonatoService.findByChampDescStartingWithIgnoreCase("b");
 		assertEquals(1, lista.size());
@@ -137,10 +121,22 @@ class CampeonatoServiceTest extends BaseTests {
 		var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findByChampDescStartingWithIgnoreCase("z"));
         assertEquals("Nenhum nome de campeonato inicia com z", exception.getMessage());
 	}
-
+	
+	@Test
+    @DisplayName("Teste buscar por ano de campeonato")
+    void findByCampeonatoYearTest() {
+        assertEquals(1, campeonatoService.findByYear(2012).size());
+    }
+	
+	@Test
+    @DisplayName("Teste buscar por ano de campeonato nulo")
+    void findByCampeonatoYearNullTest() {
+	    var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findByYear(1500));
+        assertEquals("Nenhum campeonato encontrado em 1500", exception.getMessage());
+    }
+	
 	@Test
 	@DisplayName("Teste buscar por campeonato entre anos")
-	@Sql({ "classpath:/resources/sqls/campeonato.sql" })
 	void findByCampeonatoYearBetweenTest() {
 		List<Campeonato> campeonatos = campeonatoService.findByYearBetweenOrderByYearAsc(2010, 2015);
 		List<Campeonato> resultadoEsperado = new ArrayList<>();
@@ -152,7 +148,6 @@ class CampeonatoServiceTest extends BaseTests {
 	
 	@Test
     @DisplayName("Teste buscar por campeonato entre anos inexistentes")
-    @Sql({ "classpath:/resources/sqls/campeonato.sql" })
     void findByCampeonatoYearBetweenNoExistTest() {
         var exception = assertThrows(ObjectNotFound.class, () -> campeonatoService.findByYearBetweenOrderByYearAsc(2000, 2002));
         assertEquals("Nenhum campeonato encontrado entre 2000 e 2002", exception.getMessage());

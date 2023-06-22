@@ -10,6 +10,7 @@ import br.com.trier.spring.models.Pais;
 import br.com.trier.spring.models.Piloto;
 import br.com.trier.spring.repositories.PilotoRepository;
 import br.com.trier.spring.services.PilotoService;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 
 @Service
@@ -18,14 +19,25 @@ public class PilotoServiceImpl implements PilotoService {
     @Autowired
     private PilotoRepository pilotoRepository;
     
+    private void findByNameEqualsExist(Piloto piloto) {
+        Piloto busca = pilotoRepository.findByNameEqualsIgnoreCase(piloto.getName());
+        if (piloto.getName() == null || piloto.getPais() == null) {
+            throw new IntegrityViolation("Piloto nulo");
+        }
+        if (busca != null && busca.getId() != piloto.getId()) {
+            throw new IntegrityViolation("Piloto já cadastrado");
+        }
+    }
     
     @Override
     public Piloto insert(Piloto piloto) {
+        findByNameEqualsExist(piloto);
         return pilotoRepository.save(piloto);
     }
     
     @Override
     public Piloto update(Piloto piloto) {
+        findByNameEqualsExist(piloto);
         findById(piloto.getId());
         return pilotoRepository.save(piloto);
     }

@@ -10,14 +10,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import br.com.trier.spring.BaseTests;
+import br.com.trier.spring.models.Pais;
 import br.com.trier.spring.models.Pista;
 import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
+@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:/resources/sqls/pais.sql")
+@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:/resources/sqls/pista.sql")
 class PistaServiceTest extends BaseTests{
     
     @Autowired
@@ -26,19 +30,19 @@ class PistaServiceTest extends BaseTests{
     @Autowired
     PaisService paisService;
     
+    Pais pais;
+    
     @Test
     @DisplayName("Teste buscar pista por ID")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void findByIdTest() {
         var pista = service.findById(1);
         assertNotNull(pista);
         assertEquals(1, pista.getId());
-        assertEquals("Interlagos", pista.getName());
+        assertEquals("Interlagos", pista.getName()); 
     }
     
     @Test
     @DisplayName("Teste buscar pista por ID inexistente")
-    @Sql({ "classpath:/resources/sqls/pais.sql" })
     void findByIdNonExistsTest() {
         var exception = assertThrows(ObjectNotFound.class, () -> service.findById(10));
         assertEquals("Pista 10 não existe", exception.getMessage()); 
@@ -46,12 +50,13 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste inserir pista")
+    @Sql ({"classpath:/resources/sqls/limpa_tabela.sql"})
     void insertPistaTest() {
-        Pista pista = new Pista(null, "Interlagos", 5000, null);
+        Pista pista = new Pista(4, "Lagoinha", 5000, null);
         service.insert(pista);
         pista = service.findById(1);
         assertEquals(1, pista.getId());
-        assertEquals("Interlagos", pista.getName());
+        assertEquals("Lagoinha", pista.getName());
         assertEquals(5000, pista.getSize());
     }
     
@@ -65,7 +70,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste Remover pista")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void removePistaTest() {
         service.delete(1);
         List<Pista> lista = service.listAll();
@@ -76,7 +80,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste remover pista inexistente")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void removePistaNonExistsTest() {
         var exception = assertThrows(ObjectNotFound.class, () -> service.delete(10));
         assertEquals("Pista 10 não existe", exception.getMessage());
@@ -84,7 +87,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste listar todas pistas com cadastro")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void listAllPistaTest() {
         List<Pista> lista = service.listAll();
         assertEquals(3, lista.size());  
@@ -92,7 +94,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste listar todas sem nenhum cadastro")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void listAllNoPistaTest() {
         List<Pista> lista = service.listAll();
         assertEquals(3, lista.size());
@@ -105,7 +106,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste alterar pista")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void updatePistaTest() {
         var pista = service.findById(1);
         assertEquals("Interlagos", pista.getName());
@@ -117,7 +117,6 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste buscar por pista que inicia com")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void findByPistaStartsWithTest() {
         List<Pista> lista = service.findByNameStartsWithIgnoreCase("I");
         assertEquals(1, lista.size());
@@ -129,25 +128,26 @@ class PistaServiceTest extends BaseTests{
     
     @Test
     @DisplayName("Teste buscar por tamanho de pista por pais em ordem")
-    @Sql({ "classpath:/resources/sqls/pista.sql", "classpath:/resources/sqls/pais.sql" })
-    void findByPaisOrderTest() {
-        
+    void findByPaisOrderBySizeTest() {
+        Pista pista1 = new Pista(1,"Pais 1", 2000, paisService.get);
+        Pista pista2 = new Pista(2,"Pais 2", 2500, null);
+        List<Pista> pistas = service.findByPaisOrderBySizeDesc(pais);
+        assertEquals(2, pistas.size());
+        assertEquals(0, pistas.get(0).getName());
+        assertEquals(1, pistas.get(1).getName());
     }
     
     @Test
     @DisplayName("Teste buscar por tamanho de pista por pais em ordem (sem pista)")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void findByPaisOrderEmptyTest() {
-
+        
     }
     
     @Test
     @DisplayName("Teste buscar por pista com tamanhos entre")
-    @Sql({ "classpath:/resources/sqls/pista.sql" })
     void findBySizeBetweenTest() {
         List<Pista> pistas = service.findBySizeBetween(2000, 8000);
         assertEquals(2, pistas.size());
-        
         assertEquals("Interlagos", pistas.get(0).getName());
         assertEquals(5000, pistas.get(0).getSize());
         assertEquals("Madero", pistas.get(1).getName());

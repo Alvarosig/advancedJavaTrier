@@ -12,6 +12,8 @@ public interface PilotoRepository extends JpaRepository <Piloto, Integer>{
     
     List<Piloto> findByNameStartsWithIgnoreCase (String name);
     
+    Piloto findByNameEqualsIgnoreCase (String name);
+    
     List<Piloto> findByPaisOrderByNameDesc (Pais pais);
  
     List<Piloto> findByEquipeOrderByNameDesc (Equipe equipe);

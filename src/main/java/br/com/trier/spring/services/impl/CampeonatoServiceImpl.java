@@ -2,7 +2,6 @@ package br.com.trier.spring.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,8 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     
     @Autowired
     private CampeonatoRepository repository;
-    
-    private void findByYearExist (Campeonato campeonato) {
-        Campeonato busca = repository.findByYear(campeonato.getYear());
-        if (busca != null && busca.getId() != campeonato.getId()) {
-            throw new IntegrityViolation("Campeonato já cadastrado");
-        }
-    }
-    
-    private void findByYearLimiter (Campeonato campeonato) {
+       
+    private void validYear (Campeonato campeonato) {
         if (campeonato.getYear() == null) {
             throw new IntegrityViolation("Ano não pode ser nulo");
         }
@@ -37,14 +29,12 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     
     @Override
     public Campeonato findById (Integer id) {
-        Optional <Campeonato> campeonato = repository.findById(id);
-        return campeonato.orElseThrow(() -> new ObjectNotFound("O campeonato %s não existe".formatted(id)));
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFound("O campeonato %s não existe".formatted(id)));
     }
 
     @Override
     public Campeonato insert(Campeonato campeonato) {
-    	findByYearExist(campeonato);
-    	findByYearLimiter(campeonato);
+    	validYear(campeonato);
         return repository.save(campeonato);
     }
 
@@ -60,8 +50,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     @Override
     public Campeonato update(Campeonato campeonato) {
         findById(campeonato.getId());
-        findByYearExist(campeonato);
-        findByYearLimiter(campeonato);
+        validYear(campeonato);
         return repository.save(campeonato);
     }
 
@@ -85,6 +74,15 @@ public class CampeonatoServiceImpl implements CampeonatoService {
     	List<Campeonato> lista = repository.findByYearBetweenOrderByYearAsc(startYear, endYear);
         if (lista.isEmpty()) {
             throw new ObjectNotFound("Nenhum campeonato encontrado entre %d e %d".formatted(startYear, endYear));
+        }
+        return lista;
+    }
+    
+    @Override
+    public List<Campeonato> findByYear (Integer year) {
+        List<Campeonato> lista = repository.findByYear(year);
+        if (lista.isEmpty()) {
+            throw new ObjectNotFound("Nenhum campeonato encontrado em %d".formatted(year));
         }
         return lista;
     }

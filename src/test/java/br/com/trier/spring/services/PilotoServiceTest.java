@@ -67,13 +67,21 @@ public class PilotoServiceTest extends BaseTests{
         assertEquals("Piloto insert", piloto.getName());
     }
     
-//    @Test
-//    @DisplayName("Teste inserir piloto nulo ou menor que zero")
-//    void insertPistaNullTest() {
-//        Piloto piloto = new Piloto(null, "Piloto", null , null);
-//        var exception = assertThrows(IntegrityViolation.class, () -> service.insert(piloto));
-//        assertEquals("Cadastro de piloto inválido", exception.getMessage()); 
-//    }
+    @Test
+    @DisplayName("Teste inserir piloto nulo")
+    void insertNullPilotoTest() {
+        Piloto piloto = new Piloto(1, null, equipe , null);
+        var exception = assertThrows(IntegrityViolation.class, () -> service.insert(piloto));
+        assertEquals("Piloto nulo", exception.getMessage()); 
+    }
+    
+    @Test
+    @DisplayName("Teste inserir piloto já cadastrado")
+    void insertSamePilotoTest() {
+        Piloto existingPiloto = new Piloto(2, "Alvaro", equipe, pais);
+        var exception = assertThrows(IntegrityViolation.class, () -> service.insert(existingPiloto));
+        assertEquals("Piloto já cadastrado", exception.getMessage()); 
+    }
     
     @Test
     @DisplayName("Teste Remover piloto")
