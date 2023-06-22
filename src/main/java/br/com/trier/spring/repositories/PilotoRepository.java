@@ -14,5 +14,5 @@ public interface PilotoRepository extends JpaRepository <Piloto, Integer>{
     
     List<Piloto> findByPaisOrderByNameDesc (Pais pais);
  
-    List<Piloto> findByEquipeOrderByTeamNameDesc (Equipe equipe);
+    List<Piloto> findByEquipeOrderByNameDesc (Equipe equipe);
 }

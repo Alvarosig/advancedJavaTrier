@@ -23,8 +23,8 @@ public interface CorridaService {
     
     List<Corrida> findByDateBetween(ZonedDateTime date1, ZonedDateTime date2);
     
-    List<Corrida> findByPistaOrderByName (Pista pista);
+    List<Corrida> findByPistaOrderByDate (Pista pista);
     
-    List<Corrida> findByCampeonatoOrderByName (Campeonato campeonato);
+    List<Corrida> findByCampeonatoOrderByDate (Campeonato campeonato);
     
 }

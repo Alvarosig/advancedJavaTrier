@@ -22,5 +22,5 @@ public interface PilotoService {
     
     List<Piloto> findByPaisOrderByNameDesc (Pais pais);
  
-    List<Piloto> findByEquipeOrderByTeamNameDesc (Equipe equipe);
+    List<Piloto> findByEquipeOrderByNameDesc (Equipe equipe);
 }

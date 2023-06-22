@@ -73,7 +73,7 @@ public class PilotoResource {
 	}
 	
 	@GetMapping("/equipe/{id}")
-	public ResponseEntity<List<Piloto>> findByEquipeOrderByTeamNameDesc (@PathVariable Integer id){
-		return ResponseEntity.ok(service.findByEquipeOrderByTeamNameDesc(equipeService.findById(id)));
+	public ResponseEntity<List<Piloto>> findByEquipeOrderByNameDesc (@PathVariable Integer id){
+		return ResponseEntity.ok(service.findByEquipeOrderByNameDesc(equipeService.findById(id)));
 	}
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.spring.models.Corrida;
-import br.com.trier.spring.models.Piloto;
 import br.com.trier.spring.services.CampeonatoService;
 import br.com.trier.spring.services.CorridaService;
 import br.com.trier.spring.services.PistaService;
@@ -65,12 +64,15 @@ public class CorridaResource {
 	}
     
     @GetMapping("/corrida/{id}")
-    public ResponseEntity<List<Corrida>> findByCampeonatoOrderByName(Integer id){
-    	Campeonato campeonato = service.findById(id);
-        List<Corrida> corridas = service.findByCampeonatoOrderByName(campeonato);
-        return ResponseEntity.ok(corridas);
+    public ResponseEntity<List<Corrida>> findByCampeonatoOrderByDate(Integer id){
+    	return ResponseEntity.ok(service.findByCampeonatoOrderByDate(campeonatoService.findById(id)));
     }
 
+    @GetMapping("/pista/{id}")
+    public ResponseEntity<List<Corrida>> findByPistaOrderByDate(Integer id){
+    	return ResponseEntity.ok(service.findByPistaOrderByDate(pistaService.findById(id)));
+    }
+    
     @GetMapping("/data/{date1}/{date2}")
 	public ResponseEntity<List<Corrida>> findByDateBetween(@PathVariable ZonedDateTime date1, @PathVariable ZonedDateTime date2){
 		return ResponseEntity.ok(service.findByDateBetween(date1, date2));

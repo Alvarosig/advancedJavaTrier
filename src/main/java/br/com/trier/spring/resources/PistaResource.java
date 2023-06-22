@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.spring.models.Pista;
-import br.com.trier.spring.services.CampeonatoService;
 import br.com.trier.spring.services.PaisService;
 import br.com.trier.spring.services.PistaService;
 
@@ -24,9 +23,6 @@ public class PistaResource {
     
     @Autowired
     private PistaService service;
-    
-    @Autowired
-    private CampeonatoService campeonatoService;
     
     @Autowired
     private PaisService paisService;

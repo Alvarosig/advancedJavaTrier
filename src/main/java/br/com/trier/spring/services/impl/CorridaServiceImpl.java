@@ -54,7 +54,7 @@ public class CorridaServiceImpl implements CorridaService{
 	public List<Corrida> findByDate(ZonedDateTime date) {
 		List<Corrida> lista = corridaRepository.findByDate(date);
 	    if (lista.isEmpty()) {
-	        throw new ObjectNotFound("Nem uma corrida foi encontrada na data selecionada");
+	        throw new ObjectNotFound("Nenhuma corrida foi encontrada na data selecionada");
 	    }
 	    return lista;
 	}
@@ -63,14 +63,14 @@ public class CorridaServiceImpl implements CorridaService{
 	public List<Corrida> findByDateBetween(ZonedDateTime date1, ZonedDateTime date2) {
 		List<Corrida> lista = corridaRepository.findByDateBetween(date1, date2);
 	    if (lista.isEmpty()) {
-	        throw new ObjectNotFound("Nem uma corrida foi encontrada entre a data selecionada");
+	        throw new ObjectNotFound("Nenhuma corrida foi encontrada entre a data selecionada");
 	    }
 	    return lista;
 	}
 
 	@Override
-	public List<Corrida> findByPistaOrderByName(Pista pista) {
-		List<Corrida> lista = corridaRepository.findByPistaOrderByName(pista); 
+	public List<Corrida> findByPistaOrderByDate(Pista pista) {
+		List<Corrida> lista = corridaRepository.findByPistaOrderByDate(pista); 
         if (lista.isEmpty()) {
             throw new ObjectNotFound("Nenhuma corrida cadastrada na pista: %s".formatted(pista.getName()));
         }
@@ -78,8 +78,8 @@ public class CorridaServiceImpl implements CorridaService{
 	}
 
 	@Override
-	public List<Corrida> findByCampeonatoOrderByName(Campeonato campeonato) {
-		List<Corrida> lista = corridaRepository.findByCampeonatoOrderByName(campeonato); 
+	public List<Corrida> findByCampeonatoOrderByDate(Campeonato campeonato) {
+		List<Corrida> lista = corridaRepository.findByCampeonatoOrderByDate(campeonato); 
         if (lista.isEmpty()) {
             throw new ObjectNotFound("Nenhuma corrida cadastrada no campeonato: %s".formatted(campeonato.getChampDesc()));
         }

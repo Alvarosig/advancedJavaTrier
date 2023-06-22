@@ -69,8 +69,8 @@ public class PilotoServiceImpl implements PilotoService {
     }
 
     @Override
-    public List<Piloto> findByEquipeOrderByTeamNameDesc(Equipe equipe) {
-        List<Piloto> lista = pilotoRepository.findByEquipeOrderByTeamNameDesc(equipe); 
+    public List<Piloto> findByEquipeOrderByNameDesc(Equipe equipe) {
+        List<Piloto> lista = pilotoRepository.findByEquipeOrderByNameDesc(equipe); 
         if (lista.isEmpty()) {
             throw new ObjectNotFound("Nenhum piloto cadastrado na equipe: %s".formatted(equipe.getTeamName()));
         }
