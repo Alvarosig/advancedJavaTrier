@@ -1,6 +1,7 @@
 package br.com.trier.spring.services.impl;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public class CorridaServiceImpl implements CorridaService{
 	
 	@Autowired
     private CorridaRepository corridaRepository;
+	
+	ZonedDateTime zonedDateTime = ZonedDateTime.now();
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
+	String formatedString = formatter.format(zonedDateTime);
 	
 	@Override
 	public Corrida findById(Integer id) {

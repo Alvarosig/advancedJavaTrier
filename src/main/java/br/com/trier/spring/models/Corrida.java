@@ -24,7 +24,7 @@ public class Corrida {
 	@Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id_pais")
+    @Column (name = "id_corrida")
     private Integer id;
 	
 	@Column (name = "data_corrida")

@@ -120,6 +120,34 @@ public class PilotoServiceTest extends BaseTests{
         assertEquals("altera", piloto.getName());
     }
     
+    @Test
+    @DisplayName("Teste buscar por piloto que inicia com")
+    void findByPilotoStartsWithTest() {
+        List<Piloto> lista = service.findByNameStartsWithIgnoreCase("A");
+        assertEquals(1, lista.size());
+        lista = service.findByNameStartsWithIgnoreCase("Piloto");
+        assertEquals(1, lista.size());
+        var exception = assertThrows(ObjectNotFound.class, () -> service.findByNameStartsWithIgnoreCase("z"));
+        assertEquals("Nenhum piloto cadastrado com esse nome", exception.getMessage());
+    }
     
+    @Test
+    @DisplayName("Teste buscar por país do piloto")
+    void findByPaisOrderByNameDesc () {
+    	Pais paisT = new Pais (4, "Testes");
+    	List<Piloto> lista = service.findByPaisOrderByNameDesc(pais);
+    	assertEquals(1, lista.size());
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByPaisOrderByNameDesc(paisT));
+        assertEquals("Nenhum piloto cadastrado no país: Testes", exception.getMessage());
+    }
     
+    @Test
+    @DisplayName("Teste buscar por equipe do piloto")
+    void findByEquipeOrderByNameDesc () {
+    	Equipe equipeT = new Equipe (4, "Testes");
+    	List<Piloto> lista = service.findByEquipeOrderByNameDesc(equipe);
+    	assertEquals(1, lista.size());
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByEquipeOrderByNameDesc(equipeT));
+        assertEquals("Nenhum piloto cadastrado na equipe: Testes", exception.getMessage());
+    }
 }
