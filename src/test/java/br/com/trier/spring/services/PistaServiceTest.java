@@ -129,18 +129,17 @@ class PistaServiceTest extends BaseTests{
     @Test
     @DisplayName("Teste buscar por tamanho de pista por pais em ordem")
     void findByPaisOrderBySizeTest() {
-        Pista pista1 = new Pista(1,"Pais 1", 2000, paisService.get);
-        Pista pista2 = new Pista(2,"Pais 2", 2500, null);
-        List<Pista> pistas = service.findByPaisOrderBySizeDesc(pais);
-        assertEquals(2, pistas.size());
-        assertEquals(0, pistas.get(0).getName());
-        assertEquals(1, pistas.get(1).getName());
+    	List<Pista> lista = service.findByPaisOrderBySizeDesc(paisService.findById(1));
+		assertEquals(1, lista.size());
     }
     
     @Test
     @DisplayName("Teste buscar por tamanho de pista por pais em ordem (sem pista)")
+    @Sql ({"classpath:/resources/sqls/limpa_tabela.sql"})
+    @Sql({"classpath:/resources/sqls/pais.sql"})
     void findByPaisOrderEmptyTest() {
-        
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByPaisOrderBySizeDesc(paisService.findById(1)));
+		assertEquals("Nenhuma pista cadastrada no país: Brasil", exception.getMessage());
     }
     
     @Test

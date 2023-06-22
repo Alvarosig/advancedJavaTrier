@@ -49,8 +49,8 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
     @Override
     public Campeonato update(Campeonato campeonato) {
+    	validYear(campeonato);
         findById(campeonato.getId());
-        validYear(campeonato);
         return repository.save(campeonato);
     }
 

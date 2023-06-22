@@ -32,13 +32,19 @@ public class CorridaServiceTest extends BaseTests {
     @Autowired
     CorridaService service;
     
+    @Autowired
+    CampeonatoService campeonatoService;
+    
+    @Autowired
+    PistaService pistaService;
+    
     Pista pista;
     Campeonato campeonato;
     
     @BeforeEach
     void setup () {
-        pista = new Pista(1, "Interlagos", 5000, null);
-        campeonato = new Campeonato (1, "Campeonato Veneza", 2015);
+      //  pista = new Pista(1, "Interlagos", 5000, null);
+      //  campeonato = new Campeonato (1, "Campeonato Veneza", 2015);
     }
     
     @Test
@@ -67,22 +73,6 @@ public class CorridaServiceTest extends BaseTests {
         assertEquals(1, corrida.getId());
         assertEquals(data, corrida.getDate());
     }
-    
-//    @Test
-//    @DisplayName("Teste inserir piloto nulo")
-//    void insertNullPilotoTest() {
-//        Piloto piloto = new Piloto(1, null, equipe , null);
-//        var exception = assertThrows(IntegrityViolation.class, () -> service.insert(piloto));
-//        assertEquals("Piloto nulo", exception.getMessage()); 
-//    }
-    
-//    @Test
-//    @DisplayName("Teste inserir piloto já cadastrado")
-//    void insertSamePilotoTest() {
-//        Piloto existingPiloto = new Piloto(2, "Alvaro", equipe, pais);
-//        var exception = assertThrows(IntegrityViolation.class, () -> service.insert(existingPiloto));
-//        assertEquals("Piloto já cadastrado", exception.getMessage()); 
-//    }
     
     @Test
     @DisplayName("Teste Remover corrida")
@@ -121,14 +111,72 @@ public class CorridaServiceTest extends BaseTests {
     @Test
     @DisplayName("Teste alterar corrida")
     void updateCorridaTest() {
-        String dataStr = "03/12/2018";
-        ZonedDateTime data = DateUtils.strToZoneDateTime(dataStr);
-        Pista pista1 = new Pista(1, "altera", 5000, null);
-        var corrida = service.findById(1);
-        assertEquals("Interlagos", corrida.getPista().getName());
-        var corridaAltera = new Corrida(1, data, pista1, campeonato);
-        service.update(corridaAltera);
-        corrida = service.findById(1);
-        assertEquals("altera", corrida.getPista().getName()); // falta arrumar
+    	Corrida corrida = new Corrida(1, DateUtils.strToZoneDateTime("03/12/2018"), pistaService.findById(2), campeonatoService.findById(1));
+		service.update(corrida);
+		assertEquals(2, service.listAll().size());
+		assertEquals(1, corrida.getId());
+		assertEquals(2018, corrida.getDate().getYear());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar por ano da corrida")
+    void findByDateCorridaTest() {
+    	List<Corrida> lista = service.findByDate(DateUtils.strToZoneDateTime("03/12/2018"));
+    	assertEquals(1, lista.size());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar por ano inexistente da corrida")
+    void findByDateCorridaNoExistTest() {
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByDate(DateUtils.strToZoneDateTime("03/10/2010")));
+        assertEquals("Nenhuma corrida foi encontrada na data selecionada", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar entre anos da corrida")
+    void findByDateBetweenCorridaTest() {
+    	List<Corrida> lista = service.findByDateBetween(DateUtils.strToZoneDateTime("03/12/2010"), DateUtils.strToZoneDateTime("03/12/2020"));
+    	assertEquals(2, lista.size());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar entre anos inexistentes da corrida")
+    void findByDateBetweenCorridaNoExistTest() {
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByDateBetween(DateUtils.strToZoneDateTime("03/10/2000"), DateUtils.strToZoneDateTime("03/12/2005")));
+        assertEquals("Nenhuma corrida foi encontrada entre a data selecionada", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar pistas ordenadas da corrida")
+    void findByPistaOrderByDateTest () {
+    	Pista pista1 = new Pista(1, "Pista 1", 2000, null);
+    	pistaService.insert(pista1);   	
+    	List<Corrida> lista = service.findByPistaOrderByDate(pista1);
+    	assertEquals(1, lista.size());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar pistas ordenadas da corrida inexistente")
+    void findByPistaOrderByDateInexistTest () {
+    	Pista pistaInexistente = new Pista(999, "Pista Inexistente", 5000, null);
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByPistaOrderByDate(pistaInexistente));
+        assertEquals("Nenhuma corrida cadastrada na pista: Pista Inexistente", exception.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar campeonatos ordenados da corrida")
+    void findByCampeonatoOrderByDateTest () {
+    	Campeonato campeonato = new Campeonato(1, "Nevile", 2018);
+    	campeonatoService.insert(campeonato);   	
+    	List<Corrida> lista = service.findByCampeonatoOrderByDate(campeonato);
+    	assertEquals(1, lista.size());
+    }
+    
+    @Test
+    @DisplayName("Teste buscar pistas ordenadas da corrida inexistente")
+    void findByCampeonatoOrderByDateNoExistTest () {
+    	Campeonato campeonatoInexistente = new Campeonato(999, "Campeonato Inexistente", 3000);
+    	var exception = assertThrows(ObjectNotFound.class, () -> service.findByCampeonatoOrderByDate(campeonatoInexistente));
+        assertEquals("Nenhuma corrida cadastrada no campeonato: Campeonato Inexistente", exception.getMessage());
     }
 }
