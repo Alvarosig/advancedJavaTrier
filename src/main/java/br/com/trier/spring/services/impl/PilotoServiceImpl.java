@@ -3,6 +3,7 @@ package br.com.trier.spring.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.trier.spring.models.Equipe;
 import br.com.trier.spring.models.Pais;
@@ -11,6 +12,7 @@ import br.com.trier.spring.repositories.PilotoRepository;
 import br.com.trier.spring.services.PilotoService;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 
+@Service
 public class PilotoServiceImpl implements PilotoService {
     
     @Autowired
