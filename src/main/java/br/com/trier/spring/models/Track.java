@@ -16,19 +16,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "track")
+@Entity(name = "pista")
 public class Track {
 
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "track_id")
+    @Column(name = "id_pista")
     private Integer id;
 
-    @Column(name = "track_name")
+    @Column(name = "nome_pista")
     private String name;
 
-    @Column(name = "track_size")
+    @Column(name = "tamanho_pista")
     private Integer size;
 
     @ManyToOne

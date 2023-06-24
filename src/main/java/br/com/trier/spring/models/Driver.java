@@ -17,16 +17,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "driver")
+@Entity(name = "piloto")
 public class Driver {
 
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "driver_id")
+    @Column(name = "id_piloto")
     private Integer id;
 
-    @Column(name = "driver_name")
+    @Column(name = "nome_piloto")
     private String name;
 
     @ManyToOne

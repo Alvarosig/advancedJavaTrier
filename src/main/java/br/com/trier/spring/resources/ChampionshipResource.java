@@ -14,44 +14,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.spring.models.Championship;
-import br.com.trier.spring.models.dto.ChampionshipDTO;
 import br.com.trier.spring.services.ChampionshipService;
 
 @RestController
-@RequestMapping(value = "/championships")
+@RequestMapping(value = "/campeonatos")
 public class ChampionshipResource {
 
     @Autowired
     private ChampionshipService service; 
     
     @PostMapping
-    public ResponseEntity<ChampionshipDTO> insert(@RequestBody ChampionshipDTO championshipDTO) {
-        Championship championship = new Championship(championshipDTO);
-        Championship createdChampionship = service.insert(championship);
-        return ResponseEntity.ok(createdChampionship.toDTO());
+    public ResponseEntity<Championship> insert(@RequestBody Championship championship) {
+        return ResponseEntity.ok(service.insert(championship));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ChampionshipDTO> findById(@PathVariable Integer id) {
-        Championship championship = service.findById(id);
-        return ResponseEntity.ok(championship.toDTO());
+    public ResponseEntity<Championship> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.findById(id));
     }
     
     @GetMapping
-    public ResponseEntity<List<ChampionshipDTO>> listAll() {
-        List<Championship> championships = service.listAll();
-        List<ChampionshipDTO> championshipDTOs = championships.stream()
-                .map(Championship::toDTO)
-                .toList();
-        return ResponseEntity.ok(championshipDTOs);
+    public ResponseEntity<List<Championship>> listAll() {
+        return ResponseEntity.ok(service.listAll());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ChampionshipDTO> update(@PathVariable Integer id, @RequestBody ChampionshipDTO championshipDTO) {
-        Championship championship = new Championship(championshipDTO);
+    public ResponseEntity<Championship> update(@PathVariable Integer id, @RequestBody Championship championship) {
         championship.setId(id);
-        Championship updatedChampionship = service.update(championship);
-        return ResponseEntity.ok(updatedChampionship.toDTO());
+        return ResponseEntity.ok(service.update(championship));
     }
     
     @DeleteMapping("/{id}")
@@ -61,29 +51,17 @@ public class ChampionshipResource {
     }
     
     @GetMapping("/nome/{champDesc}")
-    public ResponseEntity<List<ChampionshipDTO>> findByChampDescStartingWithIgnoreCase(@PathVariable String champDesc) {
-        List<Championship> championships = service.findByChampDescStartingWithIgnoreCase(champDesc);
-        List<ChampionshipDTO> championshipDTOs = championships.stream()
-                .map(Championship::toDTO)
-                .toList();
-        return ResponseEntity.ok(championshipDTOs);
+    public ResponseEntity<List<Championship>> findByChampDescStartingWithIgnoreCase(@PathVariable String champDesc) {
+        return ResponseEntity.ok(service.findByChampDescStartingWithIgnoreCase(champDesc));
     }
     
     @GetMapping("/entre/{startYear}/{endYear}")
-    public ResponseEntity<List<ChampionshipDTO>> findByYearBetweenOrderByYearAsc(@PathVariable Integer startYear, @PathVariable Integer endYear) {
-        List<Championship> championships = service.findByYearBetweenOrderByYearAsc(startYear, endYear);
-        List<ChampionshipDTO> championshipDTOs = championships.stream()
-                .map(Championship::toDTO)
-                .toList();
-        return ResponseEntity.ok(championshipDTOs);
+    public ResponseEntity<List<Championship>> findByYearBetweenOrderByYearAsc(@PathVariable Integer startYear, @PathVariable Integer endYear) {
+        return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(startYear, endYear));
     }
     
     @GetMapping("/ano/{year}")
-    public ResponseEntity<List<ChampionshipDTO>> findByYear(@PathVariable Integer year) {
-        List<Championship> championships = service.findByYear(year);
-        List<ChampionshipDTO> championshipDTOs = championships.stream()
-                .map(Championship::toDTO)
-                .toList();
-        return ResponseEntity.ok(championshipDTOs);
+    public ResponseEntity<List<Championship>> findByYear(@PathVariable Integer year) {
+        return ResponseEntity.ok(service.findByYear(year));
     }
 }

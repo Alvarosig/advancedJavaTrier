@@ -18,8 +18,8 @@ public class CountryServiceImpl implements CountryService {
     @Autowired
     private CountryRepository repository;
     
-    private void findByNameCountryExists(Country country) {
-        Country search = repository.findByNameCountry(country.getName());
+    private void findByName(Country country) {
+        Country search = repository.findByName(country.getName());
         if (search != null && search.getId() != country.getId()) {
             throw new IntegrityViolation("Country already exists");
         }
@@ -33,7 +33,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country insert(Country country) {
-        findByNameCountryExists(country);
+        findByName(country);
         return repository.save(country);
     }
 
@@ -49,7 +49,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public Country update(Country country) {
         findById(country.getId());
-        findByNameCountryExists(country);
+        findByName(country);
         return repository.save(country);
     }
 
@@ -61,7 +61,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> findByNameStartingWithIgnoreCase(String countryName) {
-        List<Country> list = repository.findByNameCountryStartingWithIgnoreCase(countryName);
+        List<Country> list = repository.findByNameStartingWithIgnoreCase(countryName);
         if (list.isEmpty()) {
             throw new ObjectNotFound("No country names start with %s".formatted(countryName));
         }

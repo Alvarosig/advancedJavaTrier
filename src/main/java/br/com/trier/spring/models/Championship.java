@@ -1,6 +1,5 @@
 package br.com.trier.spring.models;
 
-import br.com.trier.spring.models.dto.ChampionshipDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,26 +15,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "championship")
+@Entity(name = "campeonato")
 public class Championship {
 
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "championship_id")
+    @Column(name = "id_campeonato")
     private Integer id;
 
-    @Column(name = "champ_description")
+    @Column(name = "camp_descricao")
     private String champDesc;
 
-    @Column(name = "champ_year")
+    @Column(name = "camp_ano")
     private Integer year;
 
-    public Championship(ChampionshipDTO dto) {
-        this(dto.getId(), dto.getChampDesc(), dto.getYear());
-    }
-
-    public ChampionshipDTO toDTO() {
-        return new ChampionshipDTO(id, getChampDesc(), getYear());
-    }
 }

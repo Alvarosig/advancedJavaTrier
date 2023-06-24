@@ -1,6 +1,5 @@
 package br.com.trier.spring.models;
 
-import br.com.trier.spring.models.dto.TeamDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,23 +15,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "team")
+@Entity(name = "equipe")
 public class Team {
 
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
+    @Column(name = "id_equipe")
     private Integer id;
 
-    @Column(name = "team_name", unique = true)
+    @Column(name = "nome_equipe", unique = true)
     private String teamName;
 
-    public Team(TeamDTO dto) {
-        this(dto.getId(), dto.getTeamName());
-    }
-
-    public TeamDTO toDTO() {
-        return new TeamDTO(id, getTeamName());
-    }
 }

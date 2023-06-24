@@ -18,7 +18,7 @@ public class TeamServiceImpl implements TeamService {
     @Autowired
     private TeamRepository repository;
     
-    private void checkIfTeamNameExists(Team team) {
+    private void validateTeamName(Team team) {
         Team existingTeam = repository.findByTeamName(team.getTeamName());
         if (existingTeam != null && !existingTeam.getId().equals(team.getId())) {
             throw new IntegrityViolation("Team already exists");
@@ -33,7 +33,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team insert(Team team) {
-        checkIfTeamNameExists(team);
+        validateTeamName(team);
         return repository.save(team);
     }
 
@@ -49,7 +49,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team update(Team team) {
         findById(team.getId());
-        checkIfTeamNameExists(team);
+        validateTeamName(team);
         return repository.save(team);
     }
 

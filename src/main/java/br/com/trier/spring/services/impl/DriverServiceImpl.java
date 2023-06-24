@@ -19,7 +19,7 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private DriverRepository driverRepository;
 
-    private void findByNameEqualsExists(Driver driver) {
+    private void validateDriver(Driver driver) {
         Driver search = driverRepository.findByNameEqualsIgnoreCase(driver.getName());
         if (driver.getName() == null || driver.getCountry() == null) {
             throw new IntegrityViolation("Null driver");
@@ -31,13 +31,13 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver insert(Driver driver) {
-        findByNameEqualsExists(driver);
+        validateDriver(driver);
         return driverRepository.save(driver);
     }
 
     @Override
     public Driver update(Driver driver) {
-        findByNameEqualsExists(driver);
+        validateDriver(driver);
         findById(driver.getId());
         return driverRepository.save(driver);
     }

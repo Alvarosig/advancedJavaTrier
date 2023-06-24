@@ -20,16 +20,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity(name = "race")
+@Entity(name = "corrida")
 public class Race {
 
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "race_id")
+    @Column(name = "id_corrida")
     private Integer id;
 
-    @Column(name = "race_date")
+    @Column(name = "data_corrida")
     private ZonedDateTime date;
 
     @ManyToOne

@@ -10,8 +10,8 @@ import br.com.trier.spring.models.Country;
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Integer> {
     
-    List<Country> findByNameCountryStartingWithIgnoreCase(String nameCountry);
+    List<Country> findByNameStartingWithIgnoreCase(String name);
     
-    Country findByNameCountry(String nameCountry);
+    Country findByName(String name);
     
 }

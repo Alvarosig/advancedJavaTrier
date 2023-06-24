@@ -14,37 +14,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.spring.models.Team;
-import br.com.trier.spring.models.dto.TeamDTO;
 import br.com.trier.spring.services.TeamService;
 
 @RestController
-@RequestMapping(value = "/teams")
+@RequestMapping(value = "/equipes")
 public class TeamResource {
     
     @Autowired
     private TeamService service;
     
     @PostMapping
-    public ResponseEntity<TeamDTO> insert (@RequestBody TeamDTO team) {
-        return ResponseEntity.ok(service.insert(new Team(team)).toDTO());
+    public ResponseEntity<Team> insert (@RequestBody Team team) {
+        return ResponseEntity.ok(service.insert((team)));
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<TeamDTO> findById (@PathVariable Integer id) {
+    public ResponseEntity<Team> findById (@PathVariable Integer id) {
         Team team = service.findById(id);
-        return ResponseEntity.ok(team.toDTO());
+        return ResponseEntity.ok(team);
     }
     
     @GetMapping
-    public ResponseEntity<List<TeamDTO>> listAll () {
-        return ResponseEntity.ok(service.listAll().stream().map((team) -> team.toDTO()).toList());
+    public ResponseEntity<List<Team>> listAll () {
+        return ResponseEntity.ok(service.listAll());
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<TeamDTO> update (@PathVariable Integer id, @RequestBody TeamDTO teamDTO) {
-        Team team = new Team(teamDTO);
+    public ResponseEntity<Team> update (@PathVariable Integer id, @RequestBody Team team) {
         team.setId(id);
-        return ResponseEntity.ok(service.update(team).toDTO());
+        return ResponseEntity.ok(service.update(team));
     }
     
     @DeleteMapping("/{id}")
@@ -54,8 +52,8 @@ public class TeamResource {
     }
     
     @GetMapping("/nome/{teamName}")
-    public ResponseEntity<List<TeamDTO>> findByTeamNameStartingWithIgnoreCase (@PathVariable String teamName) {
-        return ResponseEntity.ok(service.findByTeamNameStartingWithIgnoreCase(teamName).stream().map((team) -> team.toDTO()).toList());
+    public ResponseEntity<List<Team>> findByTeamNameStartingWithIgnoreCase (@PathVariable String teamName) {
+        return ResponseEntity.ok(service.findByTeamNameStartingWithIgnoreCase(teamName));
     }
     
 }
