@@ -21,7 +21,7 @@ import br.com.trier.spring.services.RaceService;
 import br.com.trier.spring.services.TrackService;
 
 @RestController
-@RequestMapping("/races")
+@RequestMapping("/corridas")
 public class RaceResource {
 	
 	@Autowired
@@ -64,22 +64,22 @@ public class RaceResource {
 		return ResponseEntity.ok().build();
 	}
     
-    @GetMapping("/championship/{id}")
+    @GetMapping("/campeonato/{id}")
     public ResponseEntity<List<RaceDTO>> findByChampionshipOrderByDate(@PathVariable Integer id){
     	return ResponseEntity.ok(service.findByChampionshipOrderByDate(championshipService.findById(id)).stream().map(race -> race.toDTO()).toList());
     }
 
-    @GetMapping("/track/{id}")
+    @GetMapping("/pista/{id}")
     public ResponseEntity<List<RaceDTO>> findByTrackOrderByDate(@PathVariable Integer id){
     	return ResponseEntity.ok(service.findByTrackOrderByDate(trackService.findById(id)).stream().map(race -> race.toDTO()).toList());
     }
     
-    @GetMapping("/date/{date1}/{date2}")
+    @GetMapping("/data/{date1}/{date2}")
 	public ResponseEntity<List<RaceDTO>> findByDateBetween(@PathVariable ZonedDateTime date1, @PathVariable ZonedDateTime date2){
 		return ResponseEntity.ok(service.findByDateBetween(date1, date2).stream().map(race -> race.toDTO()).toList());
 	}
     
-    @GetMapping("/date/{date}")
+    @GetMapping("/data/{date}")
 	public ResponseEntity<List<RaceDTO>> findByDate(@PathVariable ZonedDateTime date){
 		return ResponseEntity.ok(service.findByDate(date).stream().map(race -> race.toDTO()).toList());
 	}

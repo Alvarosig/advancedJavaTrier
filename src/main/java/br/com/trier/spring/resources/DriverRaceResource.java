@@ -19,7 +19,7 @@ import br.com.trier.spring.services.DriverService;
 import br.com.trier.spring.services.RaceService;
 
 @RestController
-@RequestMapping("/drivers/races")
+@RequestMapping("/pilotos/corridas")
 public class DriverRaceResource {
 	
 	@Autowired
@@ -59,17 +59,17 @@ public class DriverRaceResource {
 		return ResponseEntity.ok().build();
 	}
     
-    @GetMapping("/placement/{placement}")
+    @GetMapping("/colocacao/{placement}")
 	public ResponseEntity<List<DriverRace>> findByPlacement(@PathVariable Integer placement) {
 		return ResponseEntity.ok(service.findByPlacement(placement));
 	}
     
-    @GetMapping("/driver/{id}")
+    @GetMapping("/piloto/{id}")
 	public ResponseEntity<List<DriverRace>> findByDriverOrderByPlacement(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findByDriverOrderByPlacement(driverService.findById(id)));
 	}
 	
-	@GetMapping("/race/{id}")
+	@GetMapping("/corrida/{id}")
 	public ResponseEntity<List<DriverRace>> findByRaceOrderByPlacement(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findByRaceOrderByPlacement(raceService.findById(id)));
 	}

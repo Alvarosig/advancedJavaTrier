@@ -20,7 +20,7 @@ import br.com.trier.spring.services.DriverService;
 import br.com.trier.spring.services.TeamService;
 
 @RestController
-@RequestMapping("/drivers")
+@RequestMapping("/pilotos")
 public class DriverResource {
 
 	@Autowired
@@ -63,17 +63,17 @@ public class DriverResource {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/name/{name}")
+	@GetMapping("/nome/{name}")
 	public ResponseEntity<List<DriverDTO>> findByNameStartsWithIgnoreCase(@PathVariable String name) {
 		return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name).stream().map(driver -> driver.toDTO()).toList());
 	}
 
-	@GetMapping("/country/{id}")
+	@GetMapping("/pais/{id}")
 	public ResponseEntity<List<DriverDTO>> findByCountryOrderByName(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findByCountryOrderByNameDesc(countryService.findById(id)).stream().map(driver -> driver.toDTO()).toList());
 	}
 
-	@GetMapping("/team/{id}")
+	@GetMapping("/equipe/{id}")
 	public ResponseEntity<List<DriverDTO>> findByTeamOrderByNameDesc(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findByTeamOrderByNameDesc(teamService.findById(id)).stream().map(driver -> driver.toDTO()).toList());
 	}

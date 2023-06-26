@@ -18,7 +18,7 @@ import br.com.trier.spring.services.CountryService;
 import br.com.trier.spring.services.TrackService;
 
 @RestController
-@RequestMapping("/tracks")
+@RequestMapping("/pistas")
 public class TrackResource {
     
     @Autowired
@@ -56,17 +56,17 @@ public class TrackResource {
         return ResponseEntity.ok().build();
     }
     
-    @GetMapping("/name/{name}")
+    @GetMapping("/nome/{name}")
     public ResponseEntity<List<Track>> findByNameStartsWithIgnoreCase(@PathVariable String name) {
         return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name));
     }
     
-    @GetMapping("/size/{sizeIni}/{sizeFin}")
+    @GetMapping("/tamanho/{sizeIni}/{sizeFin}")
     public ResponseEntity<List<Track>> findBySizeBetween(@PathVariable Integer sizeIni, @PathVariable Integer sizeFin) {
         return ResponseEntity.ok(service.findBySizeBetween(sizeIni, sizeFin));
     }
     
-    @GetMapping("/country/{countryId}")
+    @GetMapping("/pais/{countryId}")
     public ResponseEntity<List<Track>> findByCountryOrderBySizeDesc(@PathVariable Integer countryId) {
         return ResponseEntity.ok(service.findByCountryOrderBySizeDesc(countryService.findById(countryId)));
     }

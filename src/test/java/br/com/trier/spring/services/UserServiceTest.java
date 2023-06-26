@@ -47,7 +47,7 @@ class UserServiceTest extends BaseTests {
 	@Test
 	@DisplayName("Teste inserir usuário")
 	void insertUserTest() {
-		User usuario = new User(null, "insert", "insert", "insert");
+		User usuario = new User(1, "insert", "insert", "insert", "ADMIN");
 		userService.insert(usuario);
 		usuario = userService.findById(1);
 		assertEquals(1, usuario.getId());
@@ -95,7 +95,7 @@ class UserServiceTest extends BaseTests {
 	void updateUsersTest() {
 		var usuario = userService.findById(1);
 		assertEquals("User 1", usuario.getName());
-		var usuarioAltera = new User(1, "altera", "altera", "altera");
+		var usuarioAltera = new User(1, "altera", "altera", "altera", "ADMIN");
 		userService.update(usuarioAltera);
 		usuario = userService.findById(1);
 		assertEquals("altera", usuario.getName());
@@ -104,7 +104,7 @@ class UserServiceTest extends BaseTests {
 	@Test
 	@DisplayName("Teste alterar usuário sem cadastro")
 	void updateUsersNonExistsTest() {
-		var usuarioAltera = new User(1, "altera", "altera", "altera");
+		var usuarioAltera = new User(1, "altera", "altera", "altera", "ADMIN");
 		var exception = assertThrows(ObjectNotFound.class, () -> userService.update(usuarioAltera));
 		assertEquals("O usuário 1 não existe", exception.getMessage());
 	}
@@ -125,7 +125,7 @@ class UserServiceTest extends BaseTests {
 	@DisplayName("Teste inserir usuário com email duplicado")
 	@Sql({ "classpath:/resources/sqls/usuario.sql" })
 	void insertDuplicatedEmailTest() {
-		User usuario2 = new User(null, "Alv", "email1", "1234");
+		User usuario2 = new User(null, "Alv", "email1", "1234", "ADMIN");
 		var exception = assertThrows(IntegrityViolation.class, () -> userService.insert(usuario2));
 		assertEquals("Email já cadastrado", exception.getMessage());
 	}
@@ -134,7 +134,7 @@ class UserServiceTest extends BaseTests {
     @DisplayName ("Teste alterar usuário com email duplicado") 
 	@Sql({ "classpath:/resources/sqls/usuario.sql" })
     void updateDuplicatedEmailTest () {
-		User usuario1 = new User(null, "User 2", "email1", "123");
+		User usuario1 = new User(null, "User 2", "email1", "123", "ADMIN");
 		var exception = assertThrows(IntegrityViolation.class, () -> userService.insert(usuario1));
 		assertEquals("Email já cadastrado", exception.getMessage());
    }

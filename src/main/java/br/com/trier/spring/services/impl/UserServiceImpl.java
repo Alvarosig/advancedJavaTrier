@@ -18,9 +18,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
     
-    private void findByEmail(User user) {
-        User busca = repository.findByEmail(user.getEmail());
-        if (busca != null && busca.getId() != user.getId()) {
+    private void validateEmail(User user) {
+        Optional <User> busca = repository.findByEmail(user.getEmail());
+        if (busca != null && busca.get().getId() != user.getId()) {
             throw new IntegrityViolation("Email já cadastrado");
         }
     }
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User insert(User user) {
-        findByEmail(user);
+        validateEmail(user);
         return repository.save(user);
     }
 
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         findById(user.getId());
-        findByEmail(user);
+        validateEmail(user);
         return repository.save(user);
     }
 
