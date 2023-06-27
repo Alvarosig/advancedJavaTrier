@@ -12,6 +12,7 @@ import br.com.trier.spring.models.Race;
 import br.com.trier.spring.models.Track;
 import br.com.trier.spring.repositories.RaceRepository;
 import br.com.trier.spring.services.RaceService;
+import br.com.trier.spring.services.exceptions.IntegrityViolation;
 import br.com.trier.spring.services.exceptions.ObjectNotFound;
 
 @Service
@@ -24,6 +25,15 @@ public class RaceServiceImpl implements RaceService {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss z");
 	String formattedString = formatter.format(zonedDateTime);
 	
+	private void validateDate(Race race) {
+	    int raceYear = race.getDate().getYear();
+	    int championshipYear = race.getChampionship().getYear();
+
+	    if (raceYear != championshipYear) {
+	        throw new IntegrityViolation("Race year: " + raceYear + " must be the same as the championship year: " + championshipYear);
+	    }
+	}
+	
 	@Override
 	public Race findById(Integer id) {
 		return raceRepository.findById(id).orElseThrow(() -> new ObjectNotFound("Race with ID %s does not exist".formatted(id)));
@@ -31,6 +41,7 @@ public class RaceServiceImpl implements RaceService {
 
 	@Override
 	public Race insert(Race race) {
+		validateDate(race);
 		return raceRepository.save(race);
 	}
 
@@ -46,6 +57,7 @@ public class RaceServiceImpl implements RaceService {
 	@Override
 	public Race update(Race race) {
 		findById(race.getId());
+		validateDate(race);
 		return raceRepository.save(race);
 	}
 

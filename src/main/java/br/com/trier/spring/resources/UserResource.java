@@ -60,7 +60,7 @@ public class UserResource {
     }
     
     @Secured({"ROLE_USER"})
-    @GetMapping("/name/{name}")
+    @GetMapping("/nome/{name}")
     public ResponseEntity<List<UserDTO>> findByNameStartingWithIgnoreCase (@PathVariable String name) {
         return ResponseEntity.ok(service.findByNameStartingWithIgnoreCase(name).stream().map((user) -> user.toDTO()).toList());
     }

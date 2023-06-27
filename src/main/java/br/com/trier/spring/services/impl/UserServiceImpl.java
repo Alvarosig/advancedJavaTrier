@@ -19,11 +19,12 @@ public class UserServiceImpl implements UserService {
     private UserRepository repository;
     
     private void validateEmail(User user) {
-        Optional <User> busca = repository.findByEmail(user.getEmail());
-        if (busca != null && busca.get().getId() != user.getId()) {
+        Optional<User> busca = repository.findByEmail(user.getEmail());
+        if (busca.isPresent() && busca.get().getId() != user.getId()) {
             throw new IntegrityViolation("Email já cadastrado");
         }
     }
+
     
     @Override
     public User findById(Integer id) {
