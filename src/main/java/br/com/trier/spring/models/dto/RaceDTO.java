@@ -17,4 +17,5 @@ public class RaceDTO {
     private String trackName;
     private Integer championshipId;
     private String championshipName;
+    
 }
